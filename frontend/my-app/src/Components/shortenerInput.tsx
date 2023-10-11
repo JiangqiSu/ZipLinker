@@ -26,7 +26,7 @@ const ShortenerInput = () => {
         label="Enter the URL you want to shorten"
         value={originalURL}
         onChange={(e) => setOriginalURL(e.target.value)}
-        style={{width: '50%',marginBottom: '20px' ,marginRight:'20px'}}
+        style={{ width: '50%', marginBottom: '20px', marginRight: '20px' }}
       />
       <Button
         variant="contained"
