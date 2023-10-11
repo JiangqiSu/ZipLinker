@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {Button} from '@mui/material';
 import './ShortenerInput.css';
 const ShortenerInput = () => {
   const [originalURL, setOriginalURL] = useState('');
@@ -21,7 +22,7 @@ const ShortenerInput = () => {
           value={originalURL}
           onChange={(e) => setOriginalURL(e.target.value)}
         />
-        <button onClick={handleShortenURL}>Shorten</button>
+        <Button variant="contained" onClick={handleShortenURL}>Shorten</Button>
       </div>
       {shortenedURL && (
         <div>
