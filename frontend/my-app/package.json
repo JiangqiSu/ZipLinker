@@ -26,8 +26,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "clean_win": "rmdir /s /q node_modules",
-    "clean_mac": "rm -rf node_modules"
+    "clean_win": "rmdir /s /q node_modules build",
+    "clean_mac": "rm -rf node_modules build"
   },
   "eslintConfig": {
     "extends": [
