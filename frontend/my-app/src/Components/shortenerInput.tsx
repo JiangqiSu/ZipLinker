@@ -4,6 +4,8 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import SendIcon from '@mui/icons-material/Send';
+import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Grid';
 
 const ShortenerInput = () => {
   const [originalURL, setOriginalURL] = useState('');
@@ -21,6 +23,7 @@ const ShortenerInput = () => {
       <Typography variant="h4" gutterBottom>
         URL Shortener
       </Typography>
+
       <TextField
         variant="outlined"
         label="Enter the URL you want to shorten"
@@ -28,15 +31,39 @@ const ShortenerInput = () => {
         onChange={(e) => setOriginalURL(e.target.value)}
         style={{ width: '50%', marginBottom: '20px', marginRight: '20px' }}
       />
-      <Button
-        variant="contained"
-        size="large"
-        color="primary"
-        onClick={handleShortenURL}
-        endIcon={<SendIcon />}
+
+
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        sx={{ minHeight: '10vh' }}
       >
-        Submit
-      </Button>
+        <Grid item xs={3}>
+          <Stack spacing={2} direction="row">
+            <Button
+              variant="contained"
+              size="large"
+              color="primary"
+              onClick={handleShortenURL}
+              endIcon={<SendIcon />}
+            >
+              Submit
+            </Button>
+            <Button
+              variant="outlined"
+              size="large"
+              color="primary"
+              onClick={handleShortenURL}
+            >
+              Advanced
+            </Button>
+          </Stack>
+        </Grid>
+      </Grid>
+
       {shortenedURL && (
         <div style={{ marginTop: '20px' }}>
           <Typography variant="h6" gutterBottom>
