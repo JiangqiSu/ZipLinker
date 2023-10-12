@@ -6,6 +6,7 @@ import Link from '@mui/material/Link';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
+import { ContentCopy } from '@mui/icons-material';
 
 const ShortenerInput = () => {
   const [originalURL, setOriginalURL] = useState('');
@@ -64,6 +65,8 @@ const ShortenerInput = () => {
         </Grid>
       </Grid>
 
+
+
       {shortenedURL && (
         <div style={{ marginTop: '20px' }}>
           <Typography variant="h6" gutterBottom>
@@ -78,8 +81,22 @@ const ShortenerInput = () => {
           >
             {shortenedURL}
           </Link>
+          <div style={{ paddingTop: '15px' }}>
+          <Button
+            variant="outlined"
+            size="large"
+            color="primary"
+            endIcon={<ContentCopy />}
+            onClick={handleShortenURL}
+          >
+            Copy
+          </Button>
+          </div>
         </div>
+
       )}
+
+
     </div>
   );
 };
