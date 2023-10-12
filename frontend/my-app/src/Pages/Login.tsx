@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Container, TextField, Button, Typography, Paper } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Box, Container, TextField, Button, Typography, Paper, Grid } from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const handleLogin = () => {
-        // TODO:wait for the backend
+        // TODO: Wait for the backend
+    };
+
+    const handleHomeClick = () => {
+        navigate('/home');
     };
 
     return (
@@ -19,7 +26,7 @@ const Login = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     minHeight: '100vh',
-                  }}
+                }}
             >
                 <Paper elevation={3} sx={{ padding: '2rem', textAlign: 'center' }}>
                     <Typography variant="h4" gutterBottom>
@@ -55,6 +62,16 @@ const Login = () => {
                         Don't have an account? <Link to="/signup">Sign up</Link>
                     </Typography>
                 </Paper>
+                <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<HomeIcon />}
+                        onClick={handleHomeClick}
+                    >
+                        Home
+                    </Button>
+                </Box>
             </Box>
         </Container>
     );
