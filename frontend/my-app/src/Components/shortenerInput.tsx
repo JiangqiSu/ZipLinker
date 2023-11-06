@@ -10,13 +10,45 @@ import { ContentCopy } from '@mui/icons-material';
 
 const ShortenerInput = () => {
   const [originalURL, setOriginalURL] = useState('');
-  const [shortenedURL, setShortenedURL] = useState('');
+  const [shortenedURL, setShortenedURL] = useState<{ id: number; url: string; }[]>([]);
+  const [advanced, setAdvanced] = useState(false);
+  const [customizedPrefix, setCustomizedPrefix] = useState('');
+  const [bulkDataInput, setBulkDataInput] = useState(false);
+  const [bulkURL, setBulkURL] = useState('');
+
 
   //TODO: wait for backend
   const handleShortenURL = () => {
-    const domain = 'https://abc.com/';
-    const shortURL = domain + Math.random().toString(36).substring(2, 8);
-    setShortenedURL(shortURL);
+      let shortenedURLs: { id: number; url: string; }[]=[];
+      let domain;
+      if (customizedPrefix) {
+          domain = 'https://' + customizedPrefix + '.com/';
+      }
+      else{
+          domain = 'https://abc.com/';
+      }
+      if (bulkDataInput){
+          const URLs = bulkURL.split('\n');
+          for (let i=0;i<URLs.length;i++){
+              const tmpURL = domain + Math.random().toString(36).substring(2, 8);
+              shortenedURLs.push({id: i,url: tmpURL});
+          }
+          setShortenedURL(shortenedURLs);
+      }else{
+          const shortURL = domain + Math.random().toString(36).substring(2, 8);
+          shortenedURLs.push({id: 1,url: shortURL});
+          setShortenedURL(shortenedURLs);
+      }
+  };
+
+  const handleCopyURL = () => {
+      const urls = shortenedURL.map((item) => item.url).join(' ');
+      const input = document.createElement('input');
+      input.value = urls;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
   };
 
   return (
@@ -25,13 +57,35 @@ const ShortenerInput = () => {
         URL Shortener
       </Typography>
 
-      <TextField
-        variant="outlined"
-        label="Enter the URL you want to shorten"
-        value={originalURL}
-        onChange={(e) => setOriginalURL(e.target.value)}
-        style={{ width: '50%', marginBottom: '20px', marginRight: '20px' }}
-      />
+        {!bulkDataInput && (
+            <TextField
+            variant="outlined"
+            label="Enter the URL you want to shorten"
+            value={originalURL}
+            onChange={(e) => setOriginalURL(e.target.value)}
+            style={{ width: '50%', marginBottom: '20px', marginRight: '20px' }}
+        />)}
+
+        {bulkDataInput && (
+            <TextField
+                variant="outlined"
+                label="Enter the URLs you want to shorten"
+                multiline
+                rows={5}
+                value={bulkURL}
+                onChange={(e) => setBulkURL(e.target.value)}
+                style={{ width: '50%', marginBottom: '20px', marginRight: '20px' }}
+            />)}
+
+        {advanced && (
+            <TextField
+                variant="outlined"
+                label="Enter customized prefix"
+                value={customizedPrefix}
+                onChange={(e) => setCustomizedPrefix(e.target.value)}
+                style={{ width: '50%', marginBottom: '20px', marginRight: '20px' }}
+            />
+        )}
 
 
       <Grid
@@ -57,43 +111,55 @@ const ShortenerInput = () => {
               variant="outlined"
               size="large"
               color="primary"
-              onClick={handleShortenURL}
+              onClick={() => setAdvanced(true)}
             >
               Advanced
             </Button>
+              {advanced && (
+                  <Button
+                      variant="outlined"
+                      size="large"
+                      color="primary"
+                      onClick={() => setBulkDataInput(true)}
+                  >
+                      Bulk Data
+                  </Button>
+              )}
           </Stack>
         </Grid>
       </Grid>
 
-
-
-      {shortenedURL && (
+      {shortenedURL.length !== 0  && (
         <div style={{ marginTop: '20px' }}>
           <Typography variant="h6" gutterBottom>
             Shortened URL:
           </Typography>
-          <Link
-            href={shortenedURL}
-            target="_blank"
-            rel="noopener noreferrer"
-            color="primary"
-            style={{ fontSize: '16px', textDecoration: 'none' }}
-          >
-            {shortenedURL}
-          </Link>
+            {shortenedURL.map((link) => (
+                <Grid item xs="auto">
+                    <Link
+                        key={link.id}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        color="primary"
+                        style={{ fontSize: '16px', textDecoration: 'none' }}
+                    >
+                        {link.url}
+                    </Link>
+                </Grid>
+            ))}
           <div style={{ paddingTop: '15px' }}>
           <Button
             variant="outlined"
             size="large"
             color="primary"
             endIcon={<ContentCopy />}
-            onClick={handleShortenURL}
+            onClick={handleCopyURL}
           >
             Copy
           </Button>
           </div>
         </div>
-
       )}
 
 
