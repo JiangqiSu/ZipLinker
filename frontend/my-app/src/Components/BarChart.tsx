@@ -31,6 +31,18 @@ const BarCharts: React.FC = () => {
         var myChart = echarts.init(document.getElementById('chart') as HTMLDivElement);
 
         const options = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            toolbox: {
+                show: true,
+                //orient: 'vertical',
+                left: 'left',
+                top: 'top',
+                feature: {
+                    saveAsImage: {}
+                }
+            },
             xAxis: {
                 type: 'category',
                 data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -54,7 +66,7 @@ const BarCharts: React.FC = () => {
         };
     },[]);
 
-    return <div id="chart" style={{ width: '100%', height: '700px' }}></div>;
+    return <div id="chart" style={{width: '100%', height: '500px'}}/>;
 };
 
 export default BarCharts;

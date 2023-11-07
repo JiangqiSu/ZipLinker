@@ -34,6 +34,15 @@ const LineCharts: React.FC = () => {
             tooltip: {
                 trigger: 'axis'
             },
+            toolbox: {
+                show: true,
+                //orient: 'vertical',
+                left: 'left',
+                top: 'top',
+                feature: {
+                    saveAsImage: {}
+                }
+            },
             xAxis: {
                 type: 'category',
                 data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
