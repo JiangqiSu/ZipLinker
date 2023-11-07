@@ -7,8 +7,18 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
+import ListSubheader from '@mui/material/ListSubheader';
+import Box from '@mui/material/TextField';
+import SearchIcon from '@mui/icons-material/Search';
+import InputBase from '@mui/material/InputBase';
+import RadioGroup from '@mui/material/FormGroup';
+import Radio from '@mui/material/Radio';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import Checkbox from '@mui/material/Checkbox';
 import React, { useState } from 'react';
-import {Paper} from "@mui/material";
+import {Paper, Typography} from "@mui/material";
+import { styled, alpha } from '@mui/material/styles';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import Divider from '@mui/material/Divider';
 
@@ -76,19 +86,99 @@ const allURLs=[{
     bulk: false,
 }];
 
+
 export const SingleLinkInfo=()=>{
     const auth=true;
 
     const [open, setOpen] = useState(false);
+    const [openFilter, setOpenFilter] = useState(false);
+    const [searchContent, setSearchContent] = useState('');
 
     const handleClick = () => {
         setOpen(!open);
     };
+    const handleClickFilter = () => {
+        setOpenFilter(!openFilter);
+    };
+
+    const Search = styled('div')(({ theme }) => ({
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: alpha(theme.palette.common.white, 0.15),
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: theme.spacing(1),
+            width: 'auto',
+        },
+    }));
+
+    const SearchIconWrapper = styled('div')(({ theme }) => ({
+        padding: theme.spacing(0, 1),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    }));
+
+    const StyledInputBase = styled(InputBase)(({ theme }) => ({
+        color: 'inherit',
+        '& .MuiInputBase-input': {
+            padding: theme.spacing(1, 1, 1, 0),
+            // vertical padding + font size from searchIcon
+            paddingLeft: `calc(1em + ${theme.spacing(1)})`,
+            transition: theme.transitions.create('width'),
+            width: '100%',
+            [theme.breakpoints.up('sm')]: {
+                width: '20ch'
+            },
+        },
+    }));
 
     return (
         <div>
             <Grid container spacing={2}>
                 <Grid item xs={3}>
+                    <List>
+                        <Search>
+                            <SearchIconWrapper>
+                                <SearchIcon />
+                            </SearchIconWrapper>
+                            <StyledInputBase
+                                placeholder="Search" value={searchContent} inputProps={{ 'aria-label': 'search' }}
+                            />
+                        </Search>
+                        <ListItemButton onClick={handleClickFilter}>
+                            <ListItemText primary="Filter" />
+                            {openFilter ? <ExpandLess /> : <ExpandMore />}
+                        </ListItemButton>
+                        <Collapse in={openFilter} timeout="auto" unmountOnExit sx={{ pl: 4 }}>
+                            <Typography variant="subtitle1" gutterBottom align={"left"}>
+                                Time Span
+                            </Typography>
+                            <RadioGroup sx={{position: 'flex', flexDirection: 'row'}}>
+                                <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Last week</Typography>} />
+                                <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Last month</Typography>} />
+                                <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Last year</Typography>} />
+                            </RadioGroup>
+                            <Typography variant="subtitle1" gutterBottom align={"left"}>
+                                URL Status
+                            </Typography>
+                            <RadioGroup sx={{position: 'flex', flexDirection: 'row'}}>
+                                <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Active</Typography>} />
+                                <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Expired</Typography>} />
+                            </RadioGroup>
+                            <Typography variant="subtitle1" gutterBottom align={"left"}>
+                                Data Type
+                            </Typography>
+                            <RadioGroup row>
+                                <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Single Data</Typography>} />
+                                <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Bulk Data</Typography>} />
+                            </RadioGroup>
+                        </Collapse>
+                    </List>
                     <Paper style={{ maxHeight: 500, overflow: 'auto' }}>
                         <List sx={{marginLeft: '5%', marginRight: '10%'}}>
                             {allURLs.map((item)=>(
