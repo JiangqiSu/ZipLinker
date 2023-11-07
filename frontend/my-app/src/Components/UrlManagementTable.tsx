@@ -22,46 +22,44 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
 interface Data {
-  id: number;
-  calories: number;
-  carbs: number;
-  fat: number;
-  name: string;
-  protein: number;
+    id: number,
+    name: string,
+    shortUrl: string,
+    original: string,
+    clicks: number,
+    timeCreated: string,
 }
 
 function createData(
   id: number,
   name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
+  shortUrl: string,
+  original: string,
+  clicks: number,
+  timeCreated: string,
 ): Data {
   return {
     id,
     name,
-    calories,
-    fat,
-    carbs,
-    protein,
+    shortUrl,
+    original,
+    clicks,
+    timeCreated,
   };
 }
 
 const rows = [
-  createData(1, 'Cupcake', 305, 3.7, 67, 4.3),
-  createData(2, 'Donut', 452, 25.0, 51, 4.9),
-  createData(3, 'Eclair', 262, 16.0, 24, 6.0),
-  createData(4, 'Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData(5, 'Gingerbread', 356, 16.0, 49, 3.9),
-  createData(6, 'Honeycomb', 408, 3.2, 87, 6.5),
-  createData(7, 'Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData(8, 'Jelly Bean', 375, 0.0, 94, 0.0),
-  createData(9, 'KitKat', 518, 26.0, 65, 7.0),
-  createData(10, 'Lollipop', 392, 0.2, 98, 0.0),
-  createData(11, 'Marshmallow', 318, 0, 81, 2.0),
-  createData(12, 'Nougat', 360, 19.0, 9, 37.0),
-  createData(13, 'Oreo', 437, 18.0, 63, 4.0),
+  createData(1, 'mens apparel page', ' www.ziplink.com/abcdefghij', 'https://www.shopname...', 67, '02/30/2023'),
+  createData(2, 'womens apparel page', ' www.ziplink.com/fjslgjlsfj', 'https://www.shopname...', 8, '01/30/2023'),
+  createData(3, 'kids apparel page', ' www.ziplink.com/20p22njjd0', 'https://www.shopname...', 21, '01/12/2023'),
+  createData(4, 'mens accessories page', ' www.ziplink.com/3uwls8lnls', 'https://www.another...', 11, '12/12/2022'),
+  createData(5, 'womens accessories page', ' www.ziplink.com/3uls67enfs', 'https://www.another...', 321, '12/11/2022'),
+  createData(6, 'kids accessories page', ' www.ziplink.com/738wjdjls9', 'https://www.another...', 77, '11/09/2022'),
+  createData(7, 'mens gift page', ' www.ziplink.com/3uds43ljdf', 'https://www.store...', 19, '10/01/2022'),
+  createData(8, 'womens gift page', ' www.ziplink.com/3ujofdzlsn', 'https://www.store...', 98, '09/22/2022'),
+  createData(9, 'kids gift page', ' www.ziplink.com/llwejuu999', 'https://www.store...', 7, '08/30/2022'),
+  createData(10, 'home items page', ' www.ziplink.com/u3o3u0lksj', 'https://www.home...', 101, '08/27/2022'),
+  createData(11, 'pets items page', ' www.ziplink.com/3udlskjnfe', 'https://www.pets...', 989, '07/12/2022'),
 ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -115,32 +113,32 @@ const headCells: readonly HeadCell[] = [
   {
     id: 'name',
     numeric: false,
-    disablePadding: true,
-    label: 'Dessert (100g serving)',
+    disablePadding: false,
+    label: 'Title',
   },
   {
-    id: 'calories',
-    numeric: true,
+    id: 'shortUrl',
+    numeric: false,
     disablePadding: false,
-    label: 'Calories',
+    label: 'Shortened Url',
   },
   {
-    id: 'fat',
-    numeric: true,
+    id: 'original',
+    numeric: false,
     disablePadding: false,
-    label: 'Fat (g)',
+    label: 'Original Url',
   },
   {
-    id: 'carbs',
+    id: 'clicks',
     numeric: true,
     disablePadding: false,
-    label: 'Carbs (g)',
+    label: 'Clicks',
   },
   {
-    id: 'protein',
-    numeric: true,
+    id: 'timeCreated',
+    numeric: false,
     disablePadding: false,
-    label: 'Protein (g)',
+    label: 'Time Created',
   },
 ];
 
@@ -256,7 +254,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 }
 export default function UrlManagementTable() {
   const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('calories');
+  const [orderBy, setOrderBy] = React.useState<keyof Data>('clicks');
   const [selected, setSelected] = React.useState<readonly number[]>([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
@@ -378,10 +376,10 @@ export default function UrlManagementTable() {
                     >
                       {row.name}
                     </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
+                    <TableCell align="right">{row.shortUrl}</TableCell>
+                    <TableCell align="right">{row.original}</TableCell>
+                    <TableCell align="right">{row.clicks}</TableCell>
+                    <TableCell align="right">{row.timeCreated}</TableCell>
                   </TableRow>
                 );
               })}
