@@ -7,20 +7,14 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
-import ListSubheader from '@mui/material/ListSubheader';
-import Box from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import RadioGroup from '@mui/material/FormGroup';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import Checkbox from '@mui/material/Checkbox';
 import React, { useState } from 'react';
 import {Paper, Typography} from "@mui/material";
 import { styled, alpha } from '@mui/material/styles';
-import { FixedSizeList, ListChildComponentProps } from 'react-window';
-import Divider from '@mui/material/Divider';
 
 const allURLs=[{
     id: 1,

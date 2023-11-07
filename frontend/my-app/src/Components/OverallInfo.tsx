@@ -14,7 +14,7 @@ import Radio from "@mui/material/Radio";
 
 export const OverallInfo=()=>{
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const  auth=true;
+    const auth=true;
 
     const handleListItemClick = (
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
