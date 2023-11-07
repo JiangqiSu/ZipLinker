@@ -8,6 +8,7 @@ import { UrlManagementPage } from "./Pages/UrlManagementPage";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import HomePage from "./Pages/HomePage";
+import { HistoryPage } from "./Pages/HistoryPage";
 
 export const PageRoutes = () => {
     return (
@@ -18,6 +19,7 @@ export const PageRoutes = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/dashboard/:userId" element={<DashboardPage />} />
+                <Route path="/history/:userId" element={<HistoryPage />} />
                 <Route path="/subscription/:userId" element={<SubscriptionPage />} />
                 <Route path="/management/:userId" element={<UrlManagementPage />} />
                 <Route path="*" element={<NotFoundPage />} />
