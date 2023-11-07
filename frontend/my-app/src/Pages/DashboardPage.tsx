@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import DefaultHeader from '../Components/DefaultHeader';
-import BarCharts from '../Components/charts/BarChart';
+import BarCharts from '../Components/BarChart';
 import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';

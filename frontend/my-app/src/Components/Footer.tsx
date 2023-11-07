@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import Container from '@mui/material/Container';
 import { Copyright } from './Copyright';
-import { spacing } from '@mui/system';
 import { Box, Divider } from '@mui/material';
 
 const footers = [

@@ -8,6 +8,7 @@ export const RoutesExplainPage = () => {
             <h3>Home page: /home</h3>
             <h3>Dashboard page: /dashboard/:userId</h3>
             <h3>Subscription page for new user: /subscription/:userId</h3>
+            <h3>Url management page for members: /management/:userId</h3>
         </>
     ) : <Navigate to="/login" />;
 }
