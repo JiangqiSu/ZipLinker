@@ -9,10 +9,34 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
-    const handleLogin = () => {
-        // TODO: Wait for the backend
+    const handleLogin = async () => {
+        try {
+            const params = new URLSearchParams({
+                email: email,
+                password: password
+            });
+            const url = `http://localhost:8080/login?${params.toString()}`;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Login successful', data);
+                const Email = data.email;
+                navigate(`/dashboard/:${Email}`); 
+            } else {
+                const errorData = await response.text(); // Using .text() as the response might not be JSON
+                console.error('Login failed:', errorData);
+                alert('Login failed: ' + errorData);
+            }
+        } catch (error) {
+            console.error('An error occurred during login:', error);
+        }
     };
-
+    
     const handleHomeClick = () => {
         navigate('/home');
     };

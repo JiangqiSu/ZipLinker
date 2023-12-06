@@ -6,10 +6,40 @@ import { useNavigate } from 'react-router-dom';
 const Signup = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [username,setUsername]=useState('');
     const navigate = useNavigate();
 
-    const handleSignup = () => {
-        // TODO:wait for the backend
+    const handleSignup = async () => {
+        try {
+            const params = new URLSearchParams({
+                email: email,
+                name:username,
+                password: password,
+            });
+            const url = `http://localhost:8080/register?${params.toString()}`;
+            const response = await fetch(url, {
+                //mode: 'no-cors',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            });
+            if (response.status === 201) {
+                // Signup was successful
+                console.log('Signup successful');
+                navigate('/login'); // Redirect to login page or any other route
+            } else {
+                // Handle error responses here
+                if (response.headers.get('content-type')?.includes('application/json') && !response.bodyUsed) {
+                    const responseData = await response.json();
+                    console.error('Signup failed:', responseData);
+                } else {
+                    console.error('Signup failed: No JSON response');
+                }
+            }
+        } catch (error) {
+            console.error('An error occurred during signup:', error);
+        }
     };
     
     const handleHomeClick = () => {
@@ -43,6 +73,14 @@ const Signup = () => {
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            margin="normal"
+                        />
+                        <TextField
+                            fullWidth
+                            label="Username"
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                             margin="normal"
                         />
                         <Button
