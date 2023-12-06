@@ -4,7 +4,7 @@ package org.ziplinker.model;
 import java.sql.Date;
 
 public class User {
-    private int user_id;
+
     private String email;
     private String password;
     private int tier;
@@ -13,7 +13,7 @@ public class User {
     private int url_num;
 
     public User(
-            int user_id,
+
             String email,
             String password,
             int tier,
@@ -21,7 +21,7 @@ public class User {
             double credit,
             int url_num
     ) {
-        this.user_id = user_id;
+
         this.email = email;
         this.password = password;
         this.tier = tier;
@@ -30,13 +30,9 @@ public class User {
         this.url_num = url_num;
     }
 
-    public int getUser_id() {
-        return user_id;
-    }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
-    }
+
+
 
     public String getEmail() {
         return email;

@@ -17,7 +17,13 @@ public class ZipLinkerController {
         port(8080);
         staticFiles.location("/public");
         Gson gson = new Gson();
-        DispatchAdapter adapter = new DispatchAdapter();
+        final DispatchAdapter adapter;
+        try{
+            adapter = new DispatchAdapter();
+        }catch (Exception e){
+            System.out.println("error registering adapter: "+e.getMessage());
+            return;
+        }
 
         /**
          * User Domain Endpoints
@@ -48,6 +54,21 @@ public class ZipLinkerController {
             }
         });
 
+        post("/delete-user", (request, response) -> {
+            String email = request.queryParams("email");
+            String password = request.queryParams("password");
+
+            try {
+                adapter.userDelete(email,password);
+                response.status(201); // HTTP 401 Unauthorized
+                return gson.toJson("user deleted");
+
+            } catch (Exception e) {
+                response.status(500); // HTTP 500 Internal Server Error
+                return gson.toJson("user delete failed: " + e.getMessage());
+            }
+        });
+
         post("/login", (request, response) -> {
             String email = request.queryParams("email");
             String password = request.queryParams("password");
@@ -65,7 +86,7 @@ public class ZipLinkerController {
                     response.status(401); // HTTP 401 Unauthorized
                     return gson.toJson("Login failed: Incorrect email or password.");
                 }
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 response.status(500); // HTTP 500 Internal Server Error
                 return gson.toJson("Login failed: " + e.getMessage());
             }
