@@ -20,6 +20,7 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import {Chip} from "@mui/material";
 
 interface Data {
     id: number,
@@ -28,6 +29,7 @@ interface Data {
     original: string,
     clicks: number,
     timeCreated: string,
+    status: string,
 }
 
 function createData(
@@ -37,6 +39,7 @@ function createData(
   original: string,
   clicks: number,
   timeCreated: string,
+  status: string,
 ): Data {
   return {
     id,
@@ -45,21 +48,22 @@ function createData(
     original,
     clicks,
     timeCreated,
+    status,
   };
 }
 
 const rows = [
-  createData(1, 'mens apparel page', ' www.ziplink.com/abcdefghij', 'https://www.shopname...', 67, '02/30/2023'),
-  createData(2, 'womens apparel page', ' www.ziplink.com/fjslgjlsfj', 'https://www.shopname...', 8, '01/30/2023'),
-  createData(3, 'kids apparel page', ' www.ziplink.com/20p22njjd0', 'https://www.shopname...', 21, '01/12/2023'),
-  createData(4, 'mens accessories page', ' www.ziplink.com/3uwls8lnls', 'https://www.another...', 11, '12/12/2022'),
-  createData(5, 'womens accessories page', ' www.ziplink.com/3uls67enfs', 'https://www.another...', 321, '12/11/2022'),
-  createData(6, 'kids accessories page', ' www.ziplink.com/738wjdjls9', 'https://www.another...', 77, '11/09/2022'),
-  createData(7, 'mens gift page', ' www.ziplink.com/3uds43ljdf', 'https://www.store...', 19, '10/01/2022'),
-  createData(8, 'womens gift page', ' www.ziplink.com/3ujofdzlsn', 'https://www.store...', 98, '09/22/2022'),
-  createData(9, 'kids gift page', ' www.ziplink.com/llwejuu999', 'https://www.store...', 7, '08/30/2022'),
-  createData(10, 'home items page', ' www.ziplink.com/u3o3u0lksj', 'https://www.home...', 101, '08/27/2022'),
-  createData(11, 'pets items page', ' www.ziplink.com/3udlskjnfe', 'https://www.pets...', 989, '07/12/2022'),
+  createData(1, 'mens apparel page', ' www.ziplink.com/abcdefghij', 'https://www.shopname...', 67, '02/30/2023', 'Active'),
+  createData(2, 'womens apparel page', ' www.ziplink.com/fjslgjlsfj', 'https://www.shopname...', 8, '01/30/2023', 'Active'),
+  createData(3, 'kids apparel page', ' www.ziplink.com/20p22njjd0', 'https://www.shopname...', 21, '01/12/2023', 'InActive'),
+  createData(4, 'mens accessories page', ' www.ziplink.com/3uwls8lnls', 'https://www.another...', 11, '12/12/2022', 'Active'),
+  createData(5, 'womens accessories page', ' www.ziplink.com/3uls67enfs', 'https://www.another...', 321, '12/11/2022', 'Active'),
+  createData(6, 'kids accessories page', ' www.ziplink.com/738wjdjls9', 'https://www.another...', 77, '11/09/2022', 'Inactive'),
+  createData(7, 'mens gift page', ' www.ziplink.com/3uds43ljdf', 'https://www.store...', 19, '10/01/2022', 'Active'),
+  createData(8, 'womens gift page', ' www.ziplink.com/3ujofdzlsn', 'https://www.store...', 98, '09/22/2022', 'Active'),
+  createData(9, 'kids gift page', ' www.ziplink.com/llwejuu999', 'https://www.store...', 7, '08/30/2022', 'Inactive'),
+  createData(10, 'home items page', ' www.ziplink.com/u3o3u0lksj', 'https://www.home...', 101, '08/27/2022', 'Active'),
+  createData(11, 'pets items page', ' www.ziplink.com/3udlskjnfe', 'https://www.pets...', 989, '07/12/2022', 'Active'),
 ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -140,6 +144,12 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Time Created',
   },
+  {
+    id: 'status',
+    numeric: false,
+    disablePadding: false,
+    label: 'Status',
+  },
 ];
 
 interface EnhancedTableProps {
@@ -176,7 +186,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
+            align='left'
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -233,7 +243,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
           id="tableTitle"
           component="div"
         >
-          Nutrition
+          URL Management
         </Typography>
       )}
       {numSelected > 0 ? (
@@ -369,6 +379,7 @@ export default function UrlManagementTable() {
                       />
                     </TableCell>
                     <TableCell
+                        style={{ width: 220 }}
                       component="th"
                       id={labelId}
                       scope="row"
@@ -376,10 +387,13 @@ export default function UrlManagementTable() {
                     >
                       {row.name}
                     </TableCell>
-                    <TableCell align="right">{row.shortUrl}</TableCell>
-                    <TableCell align="right">{row.original}</TableCell>
-                    <TableCell align="right">{row.clicks}</TableCell>
-                    <TableCell align="right">{row.timeCreated}</TableCell>
+                    <TableCell style={{ width: 300 }} align="left">{row.shortUrl}</TableCell>
+                    <TableCell align="left">{row.original}</TableCell>
+                    <TableCell style={{ width: 80 }} align="left">{row.clicks}</TableCell>
+                    <TableCell style={{ width: 120 }} align="left">{row.timeCreated}</TableCell>
+                    <TableCell style={{ width: 60 }} align="left">
+                      <Chip label={row.status} color={row.status=="Active"? "success":"error"} variant="outlined" />
+                    </TableCell>
                   </TableRow>
                 );
               })}
