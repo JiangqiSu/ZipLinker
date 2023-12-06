@@ -3,7 +3,7 @@ package org.ziplinker.model;
 import java.util.Date;
 
 public class Url {
-    private int user_id;
+    private String email;
     private String long_url;
     private String short_url;
     private Date create_time;
@@ -13,7 +13,7 @@ public class Url {
     private String url_comment;
 
     public Url(
-            int userId,
+            String email,
             String longUrl,
             String shortUrl,
             Date createTime,
@@ -22,7 +22,7 @@ public class Url {
             int clicks,
             String urlComment
     ) {
-        this.user_id = userId;
+        this.email = email;
         this.long_url = longUrl;
         this.short_url = shortUrl;
         this.create_time = createTime;
@@ -32,13 +32,9 @@ public class Url {
         this.url_comment = urlComment;
     }
 
-    public int getUser_id() {
-        return user_id;
-    }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
-    }
+
+
 
     public String getLong_url() {
         return long_url;
@@ -94,5 +90,13 @@ public class Url {
 
     public void setUrl_comment(String url_comment) {
         this.url_comment = url_comment;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

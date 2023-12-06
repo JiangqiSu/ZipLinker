@@ -115,9 +115,9 @@ public class ZipLinkerController {
          */
         post("/gen-short-url", (request, response) -> {
             try {
-                int userId = Integer.parseInt(request.queryParams("user_id"));
+                String email = request.queryParams("email");
                 String longUrl = request.queryParams("long_url");
-                Url url = adapter.generateShortUrl(userId, longUrl);
+                Url url = adapter.generateShortUrl(email, longUrl);
                 return gson.toJson(url);
             } catch (Exception e) {
                 response.status(500);
@@ -143,9 +143,9 @@ public class ZipLinkerController {
 
         delete("/delete-url", (request, response) -> {
             try {
-                int userId = Integer.parseInt(request.queryParams("user_id"));
+                String email = request.queryParams("email");
                 String shortUrl = request.queryParams("short_url");
-                boolean isDeleted = adapter.deleteShortUrl(userId, shortUrl);
+                boolean isDeleted = adapter.deleteShortUrl(email, shortUrl);
                 return gson.toJson(isDeleted);
             } catch (Exception e) {
                 response.status(500);
@@ -155,9 +155,9 @@ public class ZipLinkerController {
 
         post("/get-activity", (request, response) -> {
             try {
-                int userId = Integer.parseInt(request.queryParams("user_id"));
+                String email = request.queryParams("email");
                 int pageNum = Integer.parseInt(request.queryParams("page_num"));
-                List<Url> activities = adapter.getActivity(userId, pageNum);
+                List<Url> activities = adapter.getActivity(email, pageNum);
                 return gson.toJson(activities);
             } catch (Exception e) {
                 response.status(500);
@@ -167,10 +167,10 @@ public class ZipLinkerController {
 
         post("/gen-customized-url", (request, response) -> {
             try {
-                int userId = Integer.parseInt(request.queryParams("user_id"));
+                String email = request.queryParams("email");
                 String longUrl = request.queryParams("long_url");
                 String shortUrl = request.queryParams("short_url");
-                Url url = adapter.generateCustomizedUrl(userId, longUrl, shortUrl);
+                Url url = adapter.generateCustomizedUrl(email, longUrl, shortUrl);
                 return gson.toJson(url);
             } catch (Exception e) {
                 response.status(500);

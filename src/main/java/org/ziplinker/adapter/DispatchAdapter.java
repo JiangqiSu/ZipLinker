@@ -19,6 +19,8 @@ public class DispatchAdapter {
 
     private String userServiceTableID = "team1_user";
     private String urlServiceTableID = "team1_url";
+
+    private String userUrlRelationTableID = "team1_url_click";
     private String projectId = "rice-comp-539-spring-2022";  // my-gcp-project-id
     private String instanceId = "rice-shared"; // my-bigtable-instance-id
     private String columnFamily = "cf1";
@@ -33,7 +35,7 @@ public class DispatchAdapter {
         Connection connection = createDBConnection();
 
         this.userService = new UserService(dataClient, adminClient,userServiceTableID, columnFamily);
-        this.urlService = new UrlService(dataClient, adminClient,urlServiceTableID, columnFamily);
+        this.urlService = new UrlService(dataClient, adminClient,urlServiceTableID,userUrlRelationTableID, columnFamily);
     }
 
     private Connection createDBConnection() {
@@ -56,8 +58,8 @@ public class DispatchAdapter {
     }
 
     // Delegates the generation of a short URL from a long URL to the UrlService
-    public Url generateShortUrl(int userId, String longUrl) throws Exception {
-        return urlService.generateShortUrl(userId, longUrl);
+    public Url generateShortUrl(String email, String longUrl) throws Exception {
+        return urlService.generateShortUrl(email, longUrl);
     }
 
     // Delegates the retrieval of a long URL from a short URL to the UrlService
@@ -66,18 +68,18 @@ public class DispatchAdapter {
     }
 
     // Delegates the deletion of a short URL to the UrlService
-    public boolean deleteShortUrl(int userId, String shortUrl) throws Exception {
+    public boolean deleteShortUrl(String email, String shortUrl) throws Exception {
         return urlService.deleteShortUrl(shortUrl);
     }
 
     // Delegates the retrieval of URL activity to the UrlService
-    public List<Url> getActivity(int userId, int pageNum) throws Exception {
-        return urlService.getActivity(userId, pageNum);
+    public List<Url> getActivity(String email, int pageNum) throws Exception {
+        return urlService.getActivity( email, pageNum);
     }
 
     // Delegates the generation of a customized short URL to the UrlService
-    public Url generateCustomizedUrl(int userId, String longUrl, String shortUrl) throws Exception {
-        return urlService.generateCustomizedUrl(userId, longUrl, shortUrl);
+    public Url generateCustomizedUrl(String email, String longUrl, String shortUrl) throws Exception {
+        return urlService.generateCustomizedUrl(email, longUrl, shortUrl);
     }
 }
 
