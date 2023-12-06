@@ -28,7 +28,7 @@ const Login = () => {
                 const Email = data.email;
                 navigate(`/dashboard/:${Email}`); 
             } else {
-                const errorData = await response.text(); // Using .text() as the response might not be JSON
+                const errorData = await response.text();
                 console.error('Login failed:', errorData);
                 alert('Login failed: ' + errorData);
             }
