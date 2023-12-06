@@ -107,12 +107,16 @@ public class ZipLinkerController {
             }
         });
 
-        post("/get-long-url", (request, response) -> {
+        get("/get-long-url", (request, response) -> {
             try {
-                int userId = Integer.parseInt(request.queryParams("user_id"));
                 String shortUrl = request.queryParams("short_url");
-                String longUrl = adapter.getLongUrl(userId, shortUrl);
-                return gson.toJson(longUrl);
+                String longUrl = adapter.getLongUrl(shortUrl);
+
+                if(longUrl != null)
+                    response.redirect(longUrl);
+
+                return gson.toJson("Short URL not found: " + shortUrl);
+                
             } catch (Exception e) {
                 response.status(404);
                 return gson.toJson("URL not found: " + e.getMessage());

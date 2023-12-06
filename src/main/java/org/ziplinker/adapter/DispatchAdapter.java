@@ -33,7 +33,7 @@ public class DispatchAdapter {
         Connection connection = createDBConnection();
 
         this.userService = new UserService(dataClient, adminClient,userServiceTableID, columnFamily);
-        this.urlService = new UrlService(connection);
+        this.urlService = new UrlService(dataClient, adminClient,urlServiceTableID, columnFamily);
     }
 
     private Connection createDBConnection() {
@@ -61,13 +61,13 @@ public class DispatchAdapter {
     }
 
     // Delegates the retrieval of a long URL from a short URL to the UrlService
-    public String getLongUrl(int userId, String shortUrl) throws Exception {
-        return urlService.getLongUrl(userId, shortUrl);
+    public String getLongUrl(String shortUrl) throws Exception {
+        return urlService.getLongUrl(shortUrl);
     }
 
     // Delegates the deletion of a short URL to the UrlService
     public boolean deleteShortUrl(int userId, String shortUrl) throws Exception {
-        return urlService.deleteShortUrl(userId, shortUrl);
+        return urlService.deleteShortUrl(shortUrl);
     }
 
     // Delegates the retrieval of URL activity to the UrlService
