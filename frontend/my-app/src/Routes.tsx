@@ -14,7 +14,8 @@ export const PageRoutes = () => {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<RoutesExplainPage />} />
+                <Route path="/" element={<HomePage />} />
+                <Route path="/help" element={<RoutesExplainPage />} />
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
