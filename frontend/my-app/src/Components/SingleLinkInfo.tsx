@@ -113,7 +113,6 @@ export const SingleLinkInfo = () => {
                     throw new Error('Network response was not ok');
                 }
                 const data = await response.json();
-                console.log(data);
                 const formattedData = data.map((item: {
                     long_url: any; short_url?: any; create_time?: any; expire_time?: any;
                 }, index: number) => ({
@@ -134,7 +133,6 @@ export const SingleLinkInfo = () => {
                 console.error('There was a problem with the fetch operation:', error);
             }
         };
-
         fetchURLs();
     }, []);
 
