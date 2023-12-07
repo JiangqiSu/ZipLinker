@@ -12,11 +12,11 @@ import InputBase from '@mui/material/InputBase';
 import RadioGroup from '@mui/material/FormGroup';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import React, { useState } from 'react';
-import {Paper, Typography} from "@mui/material";
+import React, { useEffect, useState } from 'react';
+import { Paper, Typography } from "@mui/material";
 import { styled, alpha } from '@mui/material/styles';
 
-const allURLs=[{
+/*const allURLs=[{
     id: 1,
     url: "https://abc.com/3j4m49",
     date: "10/12/2023",
@@ -79,14 +79,64 @@ const allURLs=[{
     status: "Active",
     bulk: false,
 }];
-
-
-export const SingleLinkInfo=()=>{
-    const auth=true;
+*/
+interface URLItem {
+    id: number;
+    short_url: string;
+    long_url: string;
+    create_date: string;
+    expire_date: string;
+    status: string;
+    bulk: boolean;
+}
+export const SingleLinkInfo = () => {
+    const auth = true;
 
     const [open, setOpen] = useState(false);
     const [openFilter, setOpenFilter] = useState(false);
     const [searchContent, setSearchContent] = useState('');
+    const [allURLs, setAllURLs] = useState<URLItem[]>([]);
+
+    const determineStatus = (item: { short_url?: any; create_time?: any; expire_time: any; }) => {
+        const currentDate = new Date();
+        const expireDate = new Date(item.expire_time);
+        return expireDate > currentDate ? "Active" : "Expired";
+    };
+    useEffect(() => {
+        const fetchURLs = async () => {
+            try {
+                const getActivityUrl = `${globalThis.url}/get-activity`;
+                const response = await fetch(`${getActivityUrl}?email=${encodeURIComponent(globalThis.userEmail)}`, {
+                    method: 'GET',
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                console.log(data);
+                const formattedData = data.map((item: {
+                    long_url: any; short_url?: any; create_time?: any; expire_time?: any;
+                }, index: number) => ({
+                    id: index + 1,
+                    short_url: item.short_url,
+                    long_url: item.long_url,
+                    create_date: item.create_time,
+                    expire_date: item.expire_time,
+                    status: determineStatus({
+                        short_url: item.short_url,
+                        create_time: item.create_time,
+                        expire_time: item.expire_time || 'Default Expire Time'
+                    }),
+                    bulk: false
+                }));
+                setAllURLs(formattedData);
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+            }
+        };
+
+        fetchURLs();
+    }, []);
 
     const handleClick = () => {
         setOpen(!open);
@@ -134,7 +184,7 @@ export const SingleLinkInfo=()=>{
     return (
         <div>
             <Grid container spacing={2}>
-                <Grid item xs={3}>
+                <Grid item xs={6}>
                     <List>
                         <Search>
                             <SearchIconWrapper>
@@ -152,64 +202,42 @@ export const SingleLinkInfo=()=>{
                             <Typography variant="subtitle1" gutterBottom align={"left"}>
                                 Time Span
                             </Typography>
-                            <RadioGroup sx={{position: 'flex', flexDirection: 'row'}}>
-                                <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Last week</Typography>} />
-                                <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Last month</Typography>} />
-                                <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Last year</Typography>} />
+                            <RadioGroup sx={{ position: 'flex', flexDirection: 'row' }}>
+                                <FormControlLabel control={<Radio size="small" />} label={<Typography variant="body2">Last week</Typography>} />
+                                <FormControlLabel control={<Radio size="small" />} label={<Typography variant="body2">Last month</Typography>} />
+                                <FormControlLabel control={<Radio size="small" />} label={<Typography variant="body2">Last year</Typography>} />
                             </RadioGroup>
                             <Typography variant="subtitle1" gutterBottom align={"left"}>
                                 URL Status
                             </Typography>
-                            <RadioGroup sx={{position: 'flex', flexDirection: 'row'}}>
-                                <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Active</Typography>} />
-                                <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Expired</Typography>} />
+                            <RadioGroup sx={{ position: 'flex', flexDirection: 'row' }}>
+                                <FormControlLabel control={<Radio size="small" />} label={<Typography variant="body2">Active</Typography>} />
+                                <FormControlLabel control={<Radio size="small" />} label={<Typography variant="body2">Expired</Typography>} />
                             </RadioGroup>
                             <Typography variant="subtitle1" gutterBottom align={"left"}>
                                 Data Type
                             </Typography>
                             <RadioGroup row>
-                                <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Single Data</Typography>} />
-                                <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Bulk Data</Typography>} />
+                                <FormControlLabel control={<Radio size="small" />} label={<Typography variant="body2">Single Data</Typography>} />
+                                <FormControlLabel control={<Radio size="small" />} label={<Typography variant="body2">Bulk Data</Typography>} />
                             </RadioGroup>
                         </Collapse>
                     </List>
-                    <Paper style={{ maxHeight: 500, overflow: 'auto' }}>
-                        <List sx={{marginLeft: '5%', marginRight: '10%'}}>
-                            {allURLs.map((item)=>(
-                                item.bulk? (
-                                    <div>
-                                        <ListItem button onClick={handleClick} sx={{paddingLeft: '20px'}}>
-                                            <ListItemText primary="Bulk Data"
-                                                          secondary={`Status: ${item.status}\nCreate Date: ${item.date}`}
-                                                          secondaryTypographyProps={{ style: { whiteSpace: 'pre-line' } }}/>
-                                            {open ? <ExpandLess /> : <ExpandMore />}
-                                        </ListItem>
-                                        <Collapse in={open} timeout="auto" unmountOnExit>
-                                            <List component="div" disablePadding>
-                                                {Array.isArray(item.url)? (
-                                                    item.url.map((u: string)=>(
-                                                        <ListItem button sx={{ pl: 4 }}>
-                                                            <ListItemText primary={`${u}`}/>
-                                                        </ListItem>
-                                                    ))):(
-                                                    <ListItem button sx={{ pl: 4 }}>
-                                                        <ListItemText primary={`${item.url}`}/>
-                                                    </ListItem>)}
-                                            </List>
-                                        </Collapse>
-                                    </div>
-                                ):(
-                                    <ListItem button sx={{paddingLeft: '20px'}}>
-                                        <ListItemText primary={`${item.url}`}
-                                                      secondary={`Status: ${item.status}\nCreate Date: ${item.date}`}
-                                                      secondaryTypographyProps={{ style: { whiteSpace: 'pre-line' } }}/>
-                                    </ListItem>)
-                            ))}
+                    <Paper style={{ maxHeight: 500, overflow: 'auto', width: '100%' }}>
+                        <List sx={{ margin: '0', padding: '0' }}>
+                            {allURLs.map((item) => (
+                                <ListItem button sx={{ paddingLeft: '20px' }}>
+                                    <ListItemText primary={`${item.short_url}`}
+                                        secondary={`Long URL:${item.long_url}\nStatus: ${item.status}\nCreate Date: ${item.create_date}\nExpire Date: ${item.expire_date}`}
+                                        secondaryTypographyProps={{ style: { whiteSpace: 'pre-line' } }} />
+                                </ListItem>)
+                            )}
                         </List>
                     </Paper>
+
                 </Grid>
-                <Grid item xs={9}>
-                    <USAMap/>
+                <Grid item xs={6}>
+                    <USAMap />
                 </Grid>
             </Grid>
         </div>
