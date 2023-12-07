@@ -40,6 +40,7 @@ const Login = () => {
         } catch (error) {
             console.error('An error occurred during login:', error);
         }
+        handleHomeClick();
     };
     
     const handleHomeClick = () => {

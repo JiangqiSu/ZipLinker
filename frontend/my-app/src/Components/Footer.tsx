@@ -5,6 +5,7 @@ import Link from '@mui/material/Link';
 import Container from '@mui/material/Container';
 import { Copyright } from './Copyright';
 import { Box, Divider } from '@mui/material';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 const footers = [
     {
@@ -15,9 +16,20 @@ const footers = [
       title: 'Legal',
       description: ['Privacy policy', 'Terms of use'],
     },
+    {
+        title: 'Subscription',
+        description: ['View Tiers']
+    }
   ];
 
 export const Footer = () => {
+
+    const navigate = useNavigate();
+
+    const goSubscription = () => {
+        navigate('/subscription/:userId');
+    }
+
     return (
         <Container
         maxWidth="md"
@@ -36,7 +48,7 @@ export const Footer = () => {
                 <ul>
                     {footer.description.map((item) => (
                     <li key={item}>
-                        <Link href="#" variant="subtitle1" color="text.secondary">
+                        <Link onClick={goSubscription} variant="subtitle1" color="text.secondary">
                         {item}
                         </Link>
                     </li>

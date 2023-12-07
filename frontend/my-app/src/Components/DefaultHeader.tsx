@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import React, {useState, useEffect} from 'react';
 
 export default function DefaultHeader() {
+
   const [manageOrHome, setManageOrHome] = useState(useLocation().pathname == '/management/:userId' ? 'Home' : 'Manage');
   const [loginOrSignOut, setLoginOrSignOut] = useState(globalThis.userEmail ? 'Sign Out' : 'Log In');
 
@@ -17,8 +18,12 @@ export default function DefaultHeader() {
     }else{
       globalThis.userEmail=''
     }
-
   };
+
+  const goHome = () => {
+    navigate('/');
+  }
+
   const handleManageClick = () => {
     navigate(manageOrHome == 'Manage' ? '/management/:userId' : '/home');
   };
@@ -28,7 +33,7 @@ export default function DefaultHeader() {
       <AppBar position="static">
         <Toolbar>
           <Button color="inherit" onClick={handleManageClick}>{manageOrHome}</Button>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography onClick={goHome} variant="h6" component="div" sx={{ flexGrow: 1 }}>
             ZipLinker
           </Typography>
           <Button color="inherit" onClick={handleLoginClick}>{loginOrSignOut}</Button>
