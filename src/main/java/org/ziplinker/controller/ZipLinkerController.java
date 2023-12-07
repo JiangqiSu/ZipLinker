@@ -125,9 +125,9 @@ public class ZipLinkerController {
             }
         });
 
-        get("/get-long-url", (request, response) -> {
+        get("/:short_url", (request, response) -> {
             try {
-                String shortUrl = request.queryParams("short_url");
+                String shortUrl = request.params("short_url");
                 String longUrl = adapter.getLongUrl(shortUrl);
                 System.out.println(longUrl);
                 if(longUrl != null) {
