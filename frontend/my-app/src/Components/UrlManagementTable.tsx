@@ -23,15 +23,16 @@ import { visuallyHidden } from '@mui/utils';
 import { Button, Chip } from "@mui/material";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useNavigate } from 'react-router-dom';
+import {useEffect, useState} from "react";
 
 interface Data {
   id: string,
   name: string,
-  shortUrl: string,
-  original: string,
+  shortURL: string,
+  oriURL: string,
   clicks: number,
-  timeCreated: string,
-  expiration: string,
+  created: string,
+  expired: string,
   status: string,
 }
 
@@ -90,13 +91,13 @@ const headCells: readonly HeadCell[] = [
     label: 'Title',
   },
   {
-    id: 'shortUrl',
+    id: 'shortURL',
     numeric: false,
     disablePadding: false,
     label: 'Shortened Url',
   },
   {
-    id: 'original',
+    id: 'oriURL',
     numeric: false,
     disablePadding: false,
     label: 'Original Url',
@@ -108,16 +109,16 @@ const headCells: readonly HeadCell[] = [
     label: 'Clicks',
   },
   {
-    id: 'timeCreated',
+    id: 'created',
     numeric: false,
     disablePadding: false,
-    label: 'Created',
+    label: 'Created Date',
   },
   {
-    id: 'expiration',
+    id: 'expired',
     numeric: false,
     disablePadding: false,
-    label: 'Expiration',
+    label: 'Expiration Date',
   },
   {
     id: 'status',
@@ -270,6 +271,52 @@ export default function UrlManagementTable() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const [allURLs, setAllURLs] = useState<Data[]>([]);
+
+  const determineStatus = (item: { short_url?: any; create_time?: any; expire_time: any; }) => {
+    const currentDate = new Date();
+    const expireDate = new Date(item.expire_time);
+    return expireDate > currentDate ? "Active" : "Expired";
+  };
+
+  useEffect(() => {
+    const fetchURLs = async () => {
+      try {
+        const getActivityUrl = `${globalThis.url}/get-activity`;
+        const response = await fetch(`${getActivityUrl}?email=${encodeURIComponent(globalThis.userEmail)}`, {
+          method: 'GET',
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        console.log(data);
+        const formattedData = data.map((item: {
+          long_url: any; short_url?: any; create_time?: any; expire_time?: any;
+        }, index: number) => ({
+          id: index + 1,
+          name: index + 1,
+          clicks: 0,
+          shortURL: "http://f23-team1-test-dot-rice-comp-539-spring-2022.uk.r.appspot.com/" + item.short_url,
+          oriURL: item.long_url,
+          created: item.create_time,
+          expired: item.expire_time,
+          status: determineStatus({
+            short_url: item.short_url,
+            create_time: item.create_time,
+            expire_time: item.expire_time || 'Default Expire Time'
+          })
+        }));
+        setAllURLs(formattedData);
+        globalThis.urlList = formattedData;
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+      }
+    };
+    fetchURLs();
+
+  }, []);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
