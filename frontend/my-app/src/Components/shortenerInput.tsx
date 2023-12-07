@@ -22,8 +22,22 @@ const ShortenerInput = () => {
     }, [advanced]);
 
     const handleShortenURL = async () => {
+        //advanced bulk shortening
+        if (advanced) {
+            let bulkURLs = bulkURL.split('\n');
+            for (let i in bulkURLs) {
+                console.log(bulkURLs[i]);
+                await shortenSingleURL(bulkURLs[i]);
+            }
+        }
+        //basic single shortening
+        else {
+            await shortenSingleURL(originalURL);
+        }
+    };
+
+    const shortenSingleURL = async (singleURL : string) => {
         let shortenedURLs: { id: string; url: string; }[] = [];
-        let domain;
         try {
             const url = globalThis.url + '/gen-short-url';
             const response = await fetch(url, {
@@ -33,7 +47,7 @@ const ShortenerInput = () => {
                 },
                 body: new URLSearchParams({
                     email: globalThis.userEmail,
-                    long_url: originalURL
+                    long_url: singleURL
                 }).toString(),
             });
             if (response.ok) {
@@ -42,7 +56,7 @@ const ShortenerInput = () => {
                 const shortURL = "http://f23-team1-test-dot-rice-comp-539-spring-2022.uk.r.appspot.com/" + data.short_url;
                 shortenedURLs.push({ id: data.short_url, url: shortURL });
                 globalThis.urlList.push({
-                    id: data.short_url, name: '', shortURL: shortURL, oriURL: originalURL, clicks: data.clicks,
+                    id: data.short_url, name: '', shortURL: shortURL, oriURL: singleURL, clicks: data.clicks,
                     created: data.create_time, expired: data.expire_time, status: 'Active'
                 })
                 setShortenedURL(shortenedURLs);
@@ -50,7 +64,7 @@ const ShortenerInput = () => {
         } catch (error) {
             console.error(error);
         }
-    };
+    }
 
     const handleCopyURL = () => {
         const urls = shortenedURL.map((item) => item.url).join(' ');
@@ -80,7 +94,7 @@ const ShortenerInput = () => {
             {advanced && (
                 <TextField
                     variant="outlined"
-                    label="Enter the URLs you want to shorten"
+                    label="Enter the URLs line by line to shorten"
                     multiline
                     rows={5}
                     value={bulkURL}
