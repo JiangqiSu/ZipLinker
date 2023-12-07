@@ -26,9 +26,24 @@ echarts.use([
     CanvasRenderer
 ]);
 
+function getDifferenceInDays(date1: Date, date2: Date) {
+    const d = Math.abs(date1.getTime() - date2.getTime());
+    const m = 1000 * 60 * 60 * 24;
+    return Math.floor(d / m);
+}
+
 const BarCharts: React.FC = () => {
     useEffect(() => {
         var myChart = echarts.init(document.getElementById('chart') as HTMLDivElement);
+
+        let chartData=[0, 0, 0, 0, 0, 0, 0];
+        const today=new Date();
+        for (const item of globalThis.urlList){
+            if (new Date(item.expired)>today){
+                let diff=getDifferenceInDays(today,new Date(item.created));
+                chartData[6-diff]+=item.clicks;
+            }
+        }
 
         const options = {
             tooltip: {
@@ -52,7 +67,7 @@ const BarCharts: React.FC = () => {
             },
             series: [
                 {
-                    data: [120, 200, 150, 80, 70, 110, 130],
+                    data: chartData,
                     type: 'bar'
                 }
             ]
