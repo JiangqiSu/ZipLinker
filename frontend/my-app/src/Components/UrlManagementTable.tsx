@@ -179,7 +179,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{
-              'aria-label': 'select all desserts',
+              'aria-label': 'select all',
             }}
           />
         </TableCell>
@@ -211,10 +211,16 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 interface EnhancedTableToolbarProps {
   numSelected: number;
+  itemsSelected:readonly number[];
 }
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
-  const { numSelected } = props;
+  const { numSelected, itemsSelected } = props;
+
+  const handleDeleteClick = () => {
+    console.log('items with indexes need to be deleted.');
+    console.log(itemsSelected);
+  };
 
   return (
     <Toolbar
@@ -247,7 +253,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         </Typography>
       )}
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
+        <Tooltip title="Delete" onClick={handleDeleteClick}>
           <IconButton>
             <DeleteIcon />
           </IconButton>
@@ -338,7 +344,7 @@ export default function UrlManagementTable() {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} itemsSelected={selected}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
