@@ -228,12 +228,9 @@ interface EnhancedTableToolbarProps {
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   const { numSelected, itemsSelected, setSelected } = props;
-
   const handleDeleteClick = async () => {
     console.log('Deleting selected items:', itemsSelected);
-
     try {
-      // Iterate through each selected ID and delete them
       for (const id of itemsSelected) {
         const itemToDelete = globalThis.urlList.find((item: { id: String; }) => item.id === id);
         if (itemToDelete) {
@@ -241,24 +238,16 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
           const response = await fetch(`${deleteUrl}?email=${encodeURIComponent(globalThis.userEmail)}&short_url=${encodeURIComponent(itemToDelete.shortUrl)}`, {
             method: 'DELETE',
           });
-
           if (!response.ok) {
-            // Handle any errors
             const errorMessage = await response.text();
             console.error('Failed to delete URL:', errorMessage);
-            continue; // Continue with the next item
+            continue;
           }
-
           console.log(`URL with ID ${id} deleted successfully.`);
         }
       }
-
-      // Update the global URL list by filtering out the deleted items
       globalThis.urlList = globalThis.urlList.filter((item: { id: String; }) => !itemsSelected.includes(item.id));
-
-      // Update the selected state to empty, since the selected items have been deleted
       setSelected([]);
-
     } catch (error) {
       console.error('Error during deletion:', error);
     }
