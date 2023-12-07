@@ -8,21 +8,8 @@ import { Box, Divider } from '@mui/material';
 
 const footers = [
     {
-      title: 'Company',
-      description: ['Team', 'History', 'Contact us', 'Locations'],
-    },
-    {
-      title: 'Features',
-      description: [
-        'Cool stuff',
-        'Random feature',
-        'Team feature',
-        'Developer stuff',
-      ],
-    },
-    {
-      title: 'Resources',
-      description: ['Resource', 'Resource name', 'Another resource', 'Final resource'],
+      title: 'About Us',
+      description: ['Team', 'Contact us', 'Locations'],
     },
     {
       title: 'Legal',
