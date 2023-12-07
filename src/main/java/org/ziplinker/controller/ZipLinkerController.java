@@ -153,11 +153,11 @@ public class ZipLinkerController {
             }
         });
 
-        post("/get-activity", (request, response) -> {
+        get("/get-activity", (request, response) -> {
             try {
                 String email = request.queryParams("email");
-                int pageNum = Integer.parseInt(request.queryParams("page_num"));
-                List<Url> activities = adapter.getActivity(email, pageNum);
+                //int pageNum = Integer.parseInt(request.queryParams("page_num"));
+                List<Url> activities = adapter.getActivity(email);
                 return gson.toJson(activities);
             } catch (Exception e) {
                 response.status(500);

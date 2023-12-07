@@ -25,15 +25,18 @@ public class UrlService {
     private String relationTableID;
     private String columnFamily;
 
+    private String relationColumnFamily;
+
     private BigtableTableAdminClient adminClient;
 
-    public UrlService(BigtableDataClient dataClient, BigtableTableAdminClient adminClient, String tableId, String relationTableID, String columnFamily) {
+    public UrlService(BigtableDataClient dataClient, BigtableTableAdminClient adminClient, String tableId, String relationTableID, String columnFamily, String relationColumnFamily) {
 
         this.dataClient = dataClient;
         this.tableId = tableId;
         this.relationTableID = relationTableID;
         this.columnFamily = columnFamily;
         this.adminClient = adminClient;
+        this.relationColumnFamily = relationColumnFamily;
     }
     // Method to generate a short URL
     public Url generateShortUrl(String email, String longUrl) throws Exception {
@@ -64,15 +67,40 @@ public class UrlService {
     }
 
     // Method to retrieve URL activity for a user
-    //use another table: team1_url_click
-    public List<Url> getActivity(String email, int pageNum) throws SQLException {
-        Query query = Query.create(tableId).prefix(email);
+    // use another table: team1_url_click
+    public List<Url> getActivity(String email) throws SQLException {
+        Query query = Query.create(relationTableID).prefix(email);
         ServerStream<Row> rows = dataClient.readRows(query);
+
+        List<Url> activities = new ArrayList<>();
         for (Row row : rows) {
             //read row and continue in here
+            String longUrl = row.getCells(relationColumnFamily, "longUrl").get(0).getValue().toStringUtf8();
+
+            String createMilliStr = row.getCells(relationColumnFamily, "createTime").get(0).getValue().toStringUtf8();
+            long createMilli =  Long.parseLong(createMilliStr);
+
+            String expireMilliStr = row.getCells(relationColumnFamily, "createTime").get(0).getValue().toStringUtf8();
+            long expireMilli = Long.parseLong(expireMilliStr);
+
+            String key = row.getKey().toStringUtf8();
+            System.out.println("???");
+
+            int emailPos = key.indexOf(email);
+            String shortUrl = key.substring(emailPos+email.length());
+
+            Url url = new Url(email,
+                    longUrl,
+                    shortUrl,
+                    new Date(createMilli),
+                    new Date(expireMilli),
+                    null,
+                    0,
+                    "");
+
+            activities.add(url);
         }
-        List<Url> activities = new ArrayList<>();
-        // TODO: Implementation to retrieve user activity
+
         return activities;
     }
 
@@ -91,9 +119,9 @@ public class UrlService {
         long currentMilli = System.currentTimeMillis();
         long expireMilli = currentMilli + TimeUnit.DAYS.toMillis(14);
         // Calculate the timestamps for create_time and expire_time
-        String createTime =  new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Timestamp(currentMilli));
-        String expireTime = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").
-                format(new Timestamp(expireMilli));
+//        String createTime =  new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Timestamp(currentMilli));
+//        String expireTime = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").
+//                format(new Timestamp(expireMilli));
 
         // Execute the SQL statement and retrieve the generated keys (i.e., the primary key for the new record)
         try  {
@@ -102,14 +130,16 @@ public class UrlService {
                             .setCell(columnFamily, "email", String.valueOf(email))
                             .setCell(columnFamily, "longUrl", longUrl)
                             .setCell(columnFamily,"shortUrl", shortUrl)
-                            .setCell(columnFamily,"createTime", createTime)
-                            .setCell(columnFamily,"expireTime", expireTime);
+                            .setCell(columnFamily,"createTime", String.valueOf(currentMilli))
+                            .setCell(columnFamily,"expireTime", String.valueOf(expireMilli));
             dataClient.mutateRow(rowMutation);
             //memorize the shortUrl user relation
-            rowMutation =
-                    RowMutation.create(this.relationTableID, String.valueOf(email)+'_'+shortUrl)
-                            .setCell(columnFamily, "longUrl", longUrl);
-            dataClient.mutateRow(rowMutation);
+            RowMutation rowMutation2 =
+                    RowMutation.create(relationTableID, String.valueOf(email)+'_'+shortUrl)
+                            .setCell(relationColumnFamily, "longUrl", longUrl)
+                            .setCell(relationColumnFamily,"createTime", String.valueOf(currentMilli))
+                            .setCell(relationColumnFamily,"expireTime", String.valueOf(expireMilli));
+            dataClient.mutateRow(rowMutation2);
 
         } catch (NotFoundException e) {
             System.err.println("Failed to write to non-existent table: " + e.getMessage());

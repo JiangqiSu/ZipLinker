@@ -24,6 +24,8 @@ public class DispatchAdapter {
     private String projectId = "rice-comp-539-spring-2022";  // my-gcp-project-id
     private String instanceId = "rice-shared"; // my-bigtable-instance-id
     private String columnFamily = "cf1";
+
+    private String relationColumnFamily = "url_click";
     private BigtableTableAdminClient adminClient;
 
     private final BigtableDataClient dataClient;
@@ -35,7 +37,7 @@ public class DispatchAdapter {
         Connection connection = createDBConnection();
 
         this.userService = new UserService(dataClient, adminClient,userServiceTableID, columnFamily);
-        this.urlService = new UrlService(dataClient, adminClient,urlServiceTableID,userUrlRelationTableID, columnFamily);
+        this.urlService = new UrlService(dataClient, adminClient,urlServiceTableID,userUrlRelationTableID, columnFamily, relationColumnFamily);
     }
 
     private Connection createDBConnection() {
@@ -73,8 +75,8 @@ public class DispatchAdapter {
     }
 
     // Delegates the retrieval of URL activity to the UrlService
-    public List<Url> getActivity(String email, int pageNum) throws Exception {
-        return urlService.getActivity( email, pageNum);
+    public List<Url> getActivity(String email) throws Exception {
+        return urlService.getActivity(email);
     }
 
     // Delegates the generation of a customized short URL to the UrlService
