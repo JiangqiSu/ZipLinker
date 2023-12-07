@@ -284,16 +284,13 @@ export default function UrlManagementTable() {
     if (event.target.checked) {
       const newSelected = globalThis.urlList.map((n: { id: string; }) => n.id);
       setSelected(newSelected);
-      console.log(selected);
       return;
     }
     setSelected([]);
-    console.log(selected);
   };
 
   const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
     const selectedIndex = selected.indexOf(id);
-    console.log(id);
     let newSelected: any[] | ((prevState: String[]) => String[]) = [];
 
     if (selectedIndex === -1) {
@@ -309,7 +306,6 @@ export default function UrlManagementTable() {
       );
     }
     setSelected(newSelected);
-    console.log(selected);
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
