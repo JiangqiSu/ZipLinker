@@ -20,23 +20,23 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-import {Button, Chip} from "@mui/material";
+import { Button, Chip } from "@mui/material";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 interface Data {
-    id: number,
-    name: string,
-    shortUrl: string,
-    original: string,
-    clicks: number,
-    timeCreated: string,
-    expiration:string,
-    status: string,
+  id: string,
+  name: string,
+  shortUrl: string,
+  original: string,
+  clicks: number,
+  timeCreated: string,
+  expiration: string,
+  status: string,
 }
 
 function createData(
-  id: number,
+  id: string,
   name: string,
   shortUrl: string,
   original: string,
@@ -222,16 +222,48 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 interface EnhancedTableToolbarProps {
   numSelected: number;
-  itemsSelected:readonly number[];
+  itemsSelected: readonly String[];
+  setSelected: Function
 }
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
-  const { numSelected, itemsSelected } = props;
+  const { numSelected, itemsSelected, setSelected } = props;
 
-  const handleDeleteClick = () => {
-    console.log('items with indexes need to be deleted.');
-    console.log(itemsSelected);
-  };
+  const handleDeleteClick = async () => {
+    console.log('Deleting selected items:', itemsSelected);
+
+    try {
+      // Iterate through each selected ID and delete them
+      for (const id of itemsSelected) {
+        const itemToDelete = globalThis.urlList.find((item: { id: String; }) => item.id === id);
+        if (itemToDelete) {
+          const deleteUrl = `${globalThis.url}/delete-url`; // Adjust this URL to your backend endpoint
+          const response = await fetch(`${deleteUrl}?email=${encodeURIComponent(globalThis.userEmail)}&short_url=${encodeURIComponent(itemToDelete.shortUrl)}`, {
+            method: 'DELETE',
+          });
+
+          if (!response.ok) {
+            // Handle any errors
+            const errorMessage = await response.text();
+            console.error('Failed to delete URL:', errorMessage);
+            continue; // Continue with the next item
+          }
+
+          console.log(`URL with ID ${id} deleted successfully.`);
+        }
+      }
+
+      // Update the global URL list by filtering out the deleted items
+      globalThis.urlList = globalThis.urlList.filter((item: { id: String; }) => !itemsSelected.includes(item.id));
+
+      // Update the selected state to empty, since the selected items have been deleted
+      setSelected([]);
+
+    } catch (error) {
+      console.error('Error during deletion:', error);
+    }
+  }
+
 
   return (
     <Toolbar
@@ -282,7 +314,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 export default function UrlManagementTable() {
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof Data>('clicks');
-  const [selected, setSelected] = React.useState<readonly number[]>([]);
+  const [selected, setSelected] = React.useState<String[]>([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -298,16 +330,19 @@ export default function UrlManagementTable() {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = globalThis.urlList.map((n: { id: number; }) => n.id);
+      const newSelected = globalThis.urlList.map((n: { id: string; }) => n.id);
       setSelected(newSelected);
+      console.log(selected);
       return;
     }
     setSelected([]);
+    console.log(selected);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+  const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
     const selectedIndex = selected.indexOf(id);
-    let newSelected: readonly number[] = [];
+    console.log(id);
+    let newSelected: any[] | ((prevState: String[]) => String[]) = [];
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, id);
@@ -322,6 +357,7 @@ export default function UrlManagementTable() {
       );
     }
     setSelected(newSelected);
+    console.log(selected);
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -337,7 +373,7 @@ export default function UrlManagementTable() {
     setDense(event.target.checked);
   };
 
-  const isSelected = (id: number) => selected.indexOf(id) !== -1;
+  const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -362,7 +398,7 @@ export default function UrlManagementTable() {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} itemsSelected={selected}/>
+        <EnhancedTableToolbar numSelected={selected.length} itemsSelected={selected} setSelected={setSelected} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -386,7 +422,8 @@ export default function UrlManagementTable() {
                 oriURL: string;
                 shortURL: string;
                 name: string;
-                id: number; }, index: any) => {
+                id: string;
+              }, index: any) => {
                 const isItemSelected = isSelected(item.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -411,7 +448,7 @@ export default function UrlManagementTable() {
                       />
                     </TableCell>
                     <TableCell
-                        style={{ width: 220 }}
+                      style={{ width: 220 }}
                       component="th"
                       id={labelId}
                       scope="row"
@@ -425,7 +462,7 @@ export default function UrlManagementTable() {
                     <TableCell style={{ width: 120 }} align="left">{item.created}</TableCell>
                     <TableCell style={{ width: 120 }} align="left">{item.expired}</TableCell>
                     <TableCell style={{ width: 60 }} align="left">
-                      <Chip label={item.status} color={item.status==="Active"? "success":"error"} variant="outlined" />
+                      <Chip label={item.status} color={item.status === "Active" ? "success" : "error"} variant="outlined" />
                     </TableCell>
                   </TableRow>
                 );
@@ -457,25 +494,25 @@ export default function UrlManagementTable() {
         label="Dense padding"
       />
       <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
-          <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleManageClick}
-              sx={{
-                  backgroundColor: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-                  boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-                  borderRadius: '20px',
-                  '&:hover': {
-                      backgroundColor: 'linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%)',
-                  },
-                  padding: '10px 30px',
-              }}
-              endIcon={<ArrowForwardIosIcon />}
-          >
-              <Typography variant="button" component="span">
-                  Dashboard
-              </Typography>
-          </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleManageClick}
+          sx={{
+            backgroundColor: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+            boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+            borderRadius: '20px',
+            '&:hover': {
+              backgroundColor: 'linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%)',
+            },
+            padding: '10px 30px',
+          }}
+          endIcon={<ArrowForwardIosIcon />}
+        >
+          <Typography variant="button" component="span">
+            Dashboard
+          </Typography>
+        </Button>
       </Box>
     </Box>
   );

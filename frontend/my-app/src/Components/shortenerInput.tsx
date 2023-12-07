@@ -10,41 +10,17 @@ import { ContentCopy } from '@mui/icons-material';
 
 const ShortenerInput = () => {
     const [originalURL, setOriginalURL] = useState('');
-    const [shortenedURL, setShortenedURL] = useState<{ id: number; url: string; }[]>([]);
+    const [shortenedURL, setShortenedURL] = useState<{ id: string; url: string; }[]>([]);
     const [advanced, setAdvanced] = useState(false);
     const [customizedPrefix, setCustomizedPrefix] = useState('');
     const [bulkDataInput, setBulkDataInput] = useState(false);
     const [bulkURL, setBulkURL] = useState('');
 
-
-    // const handleShortenURL = () => {
-    //     let shortenedURLs: { id: number; url: string; }[]=[];
-    //     let domain;
-    //     if (customizedPrefix) {
-    //         domain = 'https://' + customizedPrefix + '.com/';
-    //     }
-    //     else{
-    //         domain = 'https://abc.com/';
-    //     }
-    //     if (bulkDataInput){
-    //         const URLs = bulkURL.split('\n');
-    //         for (let i=0;i<URLs.length;i++){
-    //             const tmpURL = domain + Math.random().toString(36).substring(2, 8);
-    //             shortenedURLs.push({id: i,url: tmpURL});
-    //         }
-    //         setShortenedURL(shortenedURLs);
-    //     }else{
-    //         const shortURL = domain + Math.random().toString(36).substring(2, 8);
-    //         shortenedURLs.push({id: 1,url: shortURL});
-    //         setShortenedURL(shortenedURLs);
-    //     }
-    // };
-
     const handleShortenURL = async () => {
-        let shortenedURLs: { id: number; url: string; }[]=[];
+        let shortenedURLs: { id: string; url: string; }[] = [];
         let domain;
         try {
-            const url = globalThis.url+'/gen-short-url';
+            const url = globalThis.url + '/gen-short-url';
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -58,10 +34,12 @@ const ShortenerInput = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log('url', data);
-                const shortURL = "www.ziplink.com/"+data.short_url;
-                shortenedURLs.push({id: data.short_url,url: shortURL});
-                globalThis.urlList.push({name:'',shortURL:shortURL,oriURL:originalURL,clicks:data.clicks,
-                    created:data.create_time,expired:data.expire_time,status:'Active'})
+                const shortURL = "www.ziplink.com/" + data.short_url;
+                shortenedURLs.push({ id: data.short_url, url: shortURL });
+                globalThis.urlList.push({
+                    id: data.short_url, name: '', shortURL: shortURL, oriURL: originalURL, clicks: data.clicks,
+                    created: data.create_time, expired: data.expire_time, status: 'Active'
+                })
                 setShortenedURL(shortenedURLs);
             }
         } catch (error) {
@@ -147,7 +125,7 @@ const ShortenerInput = () => {
                 </Grid>
             </Grid>
 
-            {shortenedURL.length !== 0  && (
+            {shortenedURL.length !== 0 && (
                 <div style={{ marginTop: '20px' }}>
                     <Typography variant="h6" gutterBottom>
                         Shortened URL:
