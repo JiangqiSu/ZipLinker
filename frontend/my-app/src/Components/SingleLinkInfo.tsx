@@ -9,7 +9,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
-import RadioGroup from '@mui/material/FormGroup';
+import { RadioGroup } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import React, { useEffect, useState } from 'react';
@@ -184,7 +184,7 @@ export const SingleLinkInfo = () => {
     return (
         <div>
             <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid item xs={3}>
                     <List>
                         <Search>
                             <SearchIconWrapper>
@@ -203,23 +203,23 @@ export const SingleLinkInfo = () => {
                                 Time Span
                             </Typography>
                             <RadioGroup sx={{ position: 'flex', flexDirection: 'row' }}>
-                                <FormControlLabel control={<Radio size="small" />} label={<Typography variant="body2">Last week</Typography>} />
-                                <FormControlLabel control={<Radio size="small" />} label={<Typography variant="body2">Last month</Typography>} />
-                                <FormControlLabel control={<Radio size="small" />} label={<Typography variant="body2">Last year</Typography>} />
+                                <FormControlLabel value="week" control={<Radio size="small" />} label={<Typography variant="body2">Last week</Typography>} />
+                                <FormControlLabel value="month" control={<Radio size="small" />} label={<Typography variant="body2">Last month</Typography>} />
+                                <FormControlLabel value="year" control={<Radio size="small" />} label={<Typography variant="body2">Last year</Typography>} />
                             </RadioGroup>
                             <Typography variant="subtitle1" gutterBottom align={"left"}>
                                 URL Status
                             </Typography>
                             <RadioGroup sx={{ position: 'flex', flexDirection: 'row' }}>
-                                <FormControlLabel control={<Radio size="small" />} label={<Typography variant="body2">Active</Typography>} />
-                                <FormControlLabel control={<Radio size="small" />} label={<Typography variant="body2">Expired</Typography>} />
+                                <FormControlLabel value="active" control={<Radio size="small" />} label={<Typography variant="body2">Active</Typography>} />
+                                <FormControlLabel value="expired" control={<Radio size="small" />} label={<Typography variant="body2">Expired</Typography>} />
                             </RadioGroup>
                             <Typography variant="subtitle1" gutterBottom align={"left"}>
                                 Data Type
                             </Typography>
                             <RadioGroup row>
-                                <FormControlLabel control={<Radio size="small" />} label={<Typography variant="body2">Single Data</Typography>} />
-                                <FormControlLabel control={<Radio size="small" />} label={<Typography variant="body2">Bulk Data</Typography>} />
+                                <FormControlLabel value="single" control={<Radio size="small" />} label={<Typography variant="body2">Single Data</Typography>} />
+                                <FormControlLabel value="bulk" control={<Radio size="small" />} label={<Typography variant="body2">Bulk Data</Typography>} />
                             </RadioGroup>
                         </Collapse>
                     </List>
@@ -236,7 +236,7 @@ export const SingleLinkInfo = () => {
                     </Paper>
 
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={9}>
                     <USAMap />
                 </Grid>
             </Grid>

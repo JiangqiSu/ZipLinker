@@ -6,8 +6,8 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import React, { useState } from 'react';
-import {Typography} from "@mui/material";
-import RadioGroup from "@mui/material/FormGroup";
+import {FormControl, FormLabel, Typography} from "@mui/material";
+import { RadioGroup } from '@mui/material';
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 
@@ -34,16 +34,16 @@ export const OverallInfo=()=>{
                         Time Span
                     </Typography>
                     <RadioGroup sx={{position: 'flex', flexDirection: 'row'}}>
-                        <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Last week</Typography>} />
-                        <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Last month</Typography>} />
-                        <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Last year</Typography>} />
+                        <FormControlLabel value="week" control={<Radio size="small"/>} label={<Typography variant="body2">Last week</Typography>} />
+                        <FormControlLabel value="month" control={<Radio size="small"/>} label={<Typography variant="body2">Last month</Typography>} />
+                        <FormControlLabel value="year" control={<Radio size="small"/>} label={<Typography variant="body2">Last year</Typography>} />
                     </RadioGroup>
                     <Typography variant="subtitle1" gutterBottom align={"left"}>
                         URL Status
                     </Typography>
                     <RadioGroup sx={{position: 'flex', flexDirection: 'row'}}>
-                        <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Active</Typography>} />
-                        <FormControlLabel control={<Radio size="small"/>} label={<Typography variant="body2">Expired</Typography>} />
+                        <FormControlLabel value="active" control={<Radio size="small"/>} label={<Typography variant="body2">Active</Typography>} />
+                        <FormControlLabel value="expired" control={<Radio size="small"/>} label={<Typography variant="body2">Expired</Typography>} />
                     </RadioGroup>
                     <List sx={{marginLeft: '5%', marginRight: '10%'}} component="nav" aria-label="mailbox folders">
                         <ListItem button sx={{padding: '20px'}}
