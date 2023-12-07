@@ -76,7 +76,6 @@ public class UrlService {
         for (Row row : rows) {
             //read row and continue in here
             String longUrl = row.getCells(relationColumnFamily, "longUrl").get(0).getValue().toStringUtf8();
-
             String createMilliStr = row.getCells(relationColumnFamily, "createTime").get(0).getValue().toStringUtf8();
             long createMilli =  Long.parseLong(createMilliStr);
 
@@ -84,7 +83,6 @@ public class UrlService {
             long expireMilli = Long.parseLong(expireMilliStr);
 
             String key = row.getKey().toStringUtf8();
-            System.out.println("???");
 
             int emailPos = key.indexOf(email);
             String shortUrl = key.substring(emailPos+email.length());

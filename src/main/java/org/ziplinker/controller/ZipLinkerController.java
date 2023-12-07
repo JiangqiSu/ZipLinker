@@ -125,28 +125,6 @@ public class ZipLinkerController {
             }
         });
 
-        get("/:short_url", (request, response) -> {
-            try {
-                String shortUrl = request.params("short_url");
-                String longUrl = adapter.getLongUrl(shortUrl);
-                System.out.println(longUrl);
-                if(longUrl != null) {
-                    if(longUrl.substring(0,"https://".length())!="https://" && longUrl.substring(0,"http://".length())!="http://"){
-                        longUrl = "https://"+longUrl;
-                    }
-                    response.redirect(longUrl);
-                    response.status(301);
-
-                    return gson.toJson(longUrl);
-                }
-
-                return gson.toJson("Short URL not found: " + shortUrl);
-                
-            } catch (Exception e) {
-                response.status(404);
-                return gson.toJson("URL not found: " + e.getMessage());
-            }
-        });
 
         delete("/delete-url", (request, response) -> {
             try {
@@ -164,6 +142,7 @@ public class ZipLinkerController {
             try {
                 String email = request.queryParams("email");
                 //int pageNum = Integer.parseInt(request.queryParams("page_num"));
+                System.out.println("in get-activity");
                 List<Url> activities = adapter.getActivity(email);
                 return gson.toJson(activities);
             } catch (Exception e) {
@@ -198,6 +177,30 @@ public class ZipLinkerController {
             var user_id = request.queryParams("user_id");
             var tier = request.queryParams("tier");
             return gson.toJson("Purchase Success/Failure Message");
+        });
+
+
+        get("/:short_url", (request, response) -> {
+            try {
+                String shortUrl = request.params("short_url");
+                String longUrl = adapter.getLongUrl(shortUrl);
+                System.out.println(longUrl);
+                if(longUrl != null) {
+                    if(longUrl.substring(0,"https://".length())!="https://" && longUrl.substring(0,"http://".length())!="http://"){
+                        longUrl = "https://"+longUrl;
+                    }
+                    response.redirect(longUrl);
+                    response.status(301);
+
+                    return gson.toJson(longUrl);
+                }
+
+                return gson.toJson("Short URL not found: " + shortUrl);
+
+            } catch (Exception e) {
+                response.status(404);
+                return gson.toJson("URL not found: " + e.getMessage());
+            }
         });
     }
 }
