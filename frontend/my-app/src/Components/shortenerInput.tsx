@@ -29,7 +29,11 @@ const ShortenerInput = () => {
             setShortBulkToShow([]);
             for (let i in bulkURLs) {
                 console.log(bulkURLs[i]);
-                await shortenSingleURL(bulkURLs[i]);
+                if (customizedPrefix.length !== 0) {
+                    await shortenURLWithPrefix(bulkURLs[i], customizedPrefix);
+                } else {
+                    await shortenSingleURL(bulkURLs[i]);
+                }
             }
         }
         //basic single shortening
@@ -37,6 +41,38 @@ const ShortenerInput = () => {
             await shortenSingleURL(originalURL);
         }
     };
+
+    const shortenURLWithPrefix = async (singleURL : string, myPrefix: string) => {
+        let shortenedURLs: { id: string; url: string; }[] = [];
+        try {
+            const url = globalThis.url + '/gen-customized-url';
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    email: globalThis.userEmail,
+                    long_url: singleURL,
+                    prefix: myPrefix
+                }).toString(),
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log('url', data);
+                const shortURL = "http://f23-team1-test-dot-rice-comp-539-spring-2022.uk.r.appspot.com/" + data.short_url;
+                setShortBulkToShow(shortBulkToShow => [...shortBulkToShow, shortURL]);
+                shortenedURLs.push({ id: data.short_url, url: shortURL });
+                globalThis.urlList.push({
+                    id: data.short_url, name: '', shortURL: shortURL, oriURL: singleURL, clicks: data.clicks,
+                    created: data.create_time, expired: data.expire_time, status: 'Active'
+                })
+                setShortenedURL(shortenedURLs);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     const shortenSingleURL = async (singleURL : string) => {
         let shortenedURLs: { id: string; url: string; }[] = [];
