@@ -6,7 +6,7 @@ import Link from '@mui/material/Link';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
-import { ContentCopy } from '@mui/icons-material';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 const ShortenerInput = () => {
     const [originalURL, setOriginalURL] = useState('');
@@ -149,7 +149,7 @@ const ShortenerInput = () => {
                             variant="outlined"
                             size="large"
                             color="primary"
-                            endIcon={<ContentCopy />}
+                            endIcon={<ContentCopyIcon />}
                             onClick={handleCopyURL}
                         >
                             Copy
