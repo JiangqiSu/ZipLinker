@@ -17,6 +17,8 @@ export default function DefaultHeader() {
       navigate('/login');
     }else{
       globalThis.userEmail=''
+      // navigate('/home');
+      setLoginOrSignOut('Log In')
     }
   };
 
