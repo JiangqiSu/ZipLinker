@@ -129,9 +129,16 @@ public class ZipLinkerController {
             try {
                 String shortUrl = request.queryParams("short_url");
                 String longUrl = adapter.getLongUrl(shortUrl);
-
-                if(longUrl != null)
+                System.out.println(longUrl);
+                if(longUrl != null) {
+                    if(longUrl.substring(0,"https://".length())!="https://" && longUrl.substring(0,"http://".length())!="http://"){
+                        longUrl = "https://"+longUrl;
+                    }
                     response.redirect(longUrl);
+                    response.status(301);
+
+                    return gson.toJson(longUrl);
+                }
 
                 return gson.toJson("Short URL not found: " + shortUrl);
                 
