@@ -184,12 +184,15 @@ public class ZipLinkerController {
             try {
                 String shortUrl = request.splat()[0];
                 String longUrl = adapter.getLongUrl(shortUrl);
-                System.out.println("stored long url:"+longUrl);
+                System.out.println(longUrl);
                 if(longUrl != null) {
+                    System.out.println(longUrl.substring(0,"https://".length()));
+                    System.out.println("https://");
+                    System.out.println();
                     if(!longUrl.substring(0,"https://".length()).equals("https://") && !longUrl.substring(0,"http://".length()).equals("http://")){
                         longUrl = "https://"+longUrl;
                     }
-                    System.out.println("returned longUrl:"+longUrl);
+                    System.out.println(longUrl);
                     response.redirect(longUrl);
                     response.status(301);
 
