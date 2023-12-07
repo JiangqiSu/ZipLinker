@@ -200,7 +200,9 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         const itemToDelete = globalThis.urlList.find((item: { id: String; }) => item.id === id);
         if (itemToDelete) {
           const deleteUrl = `${globalThis.url}/delete-url`; // Adjust this URL to your backend endpoint
-          const response = await fetch(`${deleteUrl}?email=${encodeURIComponent(globalThis.userEmail)}&short_url=${encodeURIComponent(itemToDelete.shortUrl)}`, {
+          const shortUrlToDelete = itemToDelete.shortURL ? itemToDelete.shortURL.substring(69) : '';
+          console.log(shortUrlToDelete);
+          const response = await fetch(`${deleteUrl}?email=${encodeURIComponent(globalThis.userEmail)}&short_url=${encodeURIComponent(shortUrlToDelete)}`, {
             method: 'DELETE',
           });
           if (!response.ok) {
@@ -293,10 +295,10 @@ export default function UrlManagementTable() {
         const data = await response.json();
         console.log(data);
         const formattedData = data.map((item: {
-          long_url: any; short_url?: any; create_time?: any; expire_time?: any;
+         id?: any; long_url?: any; short_url?: any; create_time?: any; expire_time?: any;
         }, index: number) => ({
-          id: index + 1,
           name: index + 1,
+          id: index + 1,
           clicks: 0,
           shortURL: "http://f23-team1-test-dot-rice-comp-539-spring-2022.uk.r.appspot.com/" + item.short_url,
           oriURL: item.long_url,
