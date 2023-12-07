@@ -11,6 +11,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 const ShortenerInput = () => {
     const [originalURL, setOriginalURL] = useState('');
     const [shortenedURL, setShortenedURL] = useState<{ id: string; url: string; }[]>([]);
+    const [shortBulkToShow, setShortBulkToShow] = useState<string[]>([]);
     const [advanced, setAdvanced] = useState(false);
     const [advancedOrBasic, setAOB] = useState('Advanced');
     const [customizedPrefix, setCustomizedPrefix] = useState('');
@@ -25,6 +26,7 @@ const ShortenerInput = () => {
         //advanced bulk shortening
         if (advanced) {
             let bulkURLs = bulkURL.split('\n');
+            setShortBulkToShow([]);
             for (let i in bulkURLs) {
                 console.log(bulkURLs[i]);
                 await shortenSingleURL(bulkURLs[i]);
@@ -54,6 +56,7 @@ const ShortenerInput = () => {
                 const data = await response.json();
                 console.log('url', data);
                 const shortURL = "http://f23-team1-test-dot-rice-comp-539-spring-2022.uk.r.appspot.com/" + data.short_url;
+                setShortBulkToShow(shortBulkToShow => [...shortBulkToShow, shortURL]);
                 shortenedURLs.push({ id: data.short_url, url: shortURL });
                 globalThis.urlList.push({
                     id: data.short_url, name: '', shortURL: shortURL, oriURL: singleURL, clicks: data.clicks,
@@ -112,7 +115,6 @@ const ShortenerInput = () => {
                 />
             )}
 
-
             <Grid
                 container
                 spacing={0}
@@ -144,7 +146,20 @@ const ShortenerInput = () => {
                 </Grid>
             </Grid>
 
-            {shortenedURL.length !== 0 && (
+            {advanced && shortBulkToShow.length !== 0 && (
+                <div>
+                    <Typography variant="h6" gutterBottom>
+                        Shortened URL:
+                    </Typography>
+                    <ul>
+                        {shortBulkToShow.map((item, index) => (
+                            <li key={index}>{item}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
+            {!advanced && shortenedURL.length !== 0 && (
                 <div style={{ marginTop: '20px' }}>
                     <Typography variant="h6" gutterBottom>
                         Shortened URL:
