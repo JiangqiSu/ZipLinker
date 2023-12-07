@@ -10,7 +10,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 const footers = [
     {
       title: 'About Us',
-      description: ['Team', 'Contact us', 'Locations'],
+      description: ['Version 7', 'Team', 'Contact us', 'Locations'],
     },
     {
       title: 'Legal',
