@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -12,9 +12,14 @@ const ShortenerInput = () => {
     const [originalURL, setOriginalURL] = useState('');
     const [shortenedURL, setShortenedURL] = useState<{ id: string; url: string; }[]>([]);
     const [advanced, setAdvanced] = useState(false);
+    const [advancedOrBasic, setAOB] = useState('Advanced');
     const [customizedPrefix, setCustomizedPrefix] = useState('');
-    const [bulkDataInput, setBulkDataInput] = useState(false);
+    // const [bulkDataInput, setBulkDataInput] = useState(false);
     const [bulkURL, setBulkURL] = useState('');
+
+    useEffect(() => {
+        setAOB(advanced ? 'Basic' : 'Advanced');
+    }, [advanced]);
 
     const handleShortenURL = async () => {
         let shortenedURLs: { id: string; url: string; }[] = [];
@@ -63,7 +68,7 @@ const ShortenerInput = () => {
                 URL Shortener
             </Typography>
 
-            {!bulkDataInput && (
+            {!advanced && (
                 <TextField
                     variant="outlined"
                     label="Enter the URL you want to shorten"
@@ -72,7 +77,7 @@ const ShortenerInput = () => {
                     style={{ width: '50%', marginBottom: '20px', marginRight: '20px' }}
                 />)}
 
-            {bulkDataInput && (
+            {advanced && (
                 <TextField
                     variant="outlined"
                     label="Enter the URLs you want to shorten"
@@ -117,9 +122,9 @@ const ShortenerInput = () => {
                             variant="outlined"
                             size="large"
                             color="primary"
-                            onClick={() => setAdvanced(true)}
+                            onClick={() => setAdvanced(!advanced)}
                         >
-                            Advanced
+                            {advancedOrBasic}
                         </Button>
                     </Stack>
                 </Grid>
