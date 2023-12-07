@@ -8,7 +8,7 @@ import React, {useState, useEffect} from 'react';
 
 export default function DefaultHeader() {
 
-  const [manageOrHome, setManageOrHome] = useState(useLocation().pathname == '/management/:userId' ? 'Home' : 'Manage');
+  const [manageOrHome, setManageOrHome] = useState(useLocation().pathname == '/management/'+globalThis.userEmail ? 'Home' : 'Manage');
   const [loginOrSignOut, setLoginOrSignOut] = useState(globalThis.userEmail ? 'Sign Out' : 'Log In');
 
   const navigate = useNavigate();

@@ -31,11 +31,36 @@ const Login = () => {
                 console.log('Login successful', data);
                 const Email = data.email;
                 globalThis.userEmail=Email
-                navigate(`/dashboard/:${Email}`); 
+                // navigate(`/dashboard/:${Email}`);
             } else {
                 const errorData = await response.text();
                 console.error('Login failed:', errorData);
                 alert('Login failed: ' + errorData);
+            }
+            try {
+                const getActivityUrl = `${globalThis.url}/get-activity`;
+                const response = await fetch(`${getActivityUrl}?email=${encodeURIComponent(globalThis.userEmail)}`, {
+                    method: 'GET',
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                const formattedData = data.map((item: {
+                    long_url: any; short_url?: any; create_time?: any; expire_time?: any; clicks:number;url_comment:string;
+                }, index: number) => ({
+                    id: index + 1,
+                    name: item.url_comment,
+                    shortURL: item.short_url,
+                    oriURL: item.long_url,
+                    created: item.create_time,
+                    expired: item.expire_time,
+                    status: new Date(item.expire_time)>new Date()? 'Active':'Expired',
+                    clicks: item.clicks,
+                }));
+                globalThis.urlList=formattedData
+            }catch (error) {
+
             }
         } catch (error) {
             console.error('An error occurred during login:', error);

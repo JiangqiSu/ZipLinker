@@ -94,11 +94,11 @@ const ShortenerInput = () => {
                 const shortURL = "http://f23-team1-test-dot-rice-comp-539-spring-2022.uk.r.appspot.com/" + data.short_url;
                 setShortBulkToShow(shortBulkToShow => [...shortBulkToShow, shortURL]);
                 shortenedURLs.push({ id: data.short_url, url: shortURL });
+                setShortenedURL(shortenedURLs);
                 globalThis.urlList.push({
                     id: data.short_url, name: '', shortURL: shortURL, oriURL: singleURL, clicks: data.clicks,
                     created: data.create_time, expired: data.expire_time, status: 'Active'
                 })
-                setShortenedURL(shortenedURLs);
             }
         } catch (error) {
             console.error(error);
