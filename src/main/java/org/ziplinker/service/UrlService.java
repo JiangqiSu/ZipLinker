@@ -79,13 +79,13 @@ public class UrlService {
             String createMilliStr = row.getCells(relationColumnFamily, "createTime").get(0).getValue().toStringUtf8();
             long createMilli =  Long.parseLong(createMilliStr);
 
-            String expireMilliStr = row.getCells(relationColumnFamily, "createTime").get(0).getValue().toStringUtf8();
+            String expireMilliStr = row.getCells(relationColumnFamily, "expireTime").get(0).getValue().toStringUtf8();
             long expireMilli = Long.parseLong(expireMilliStr);
 
             String key = row.getKey().toStringUtf8();
 
             int emailPos = key.indexOf(email);
-            String shortUrl = key.substring(emailPos+email.length());
+            String shortUrl = key.substring(emailPos+email.length()+1);
 
             Url url = new Url(email,
                     longUrl,
@@ -103,11 +103,11 @@ public class UrlService {
     }
 
     // Method to generate a customized short URL
-    public Url generateCustomizedUrl(String email, String longUrl, String shortUrl) throws SQLException {
-        // TODO: Check if the shortUrl already exists
-        // TODO: If it does, throw an SQLException
-        // TODO: If not, use the custom short URL provided
-        return createUrl(email, longUrl, shortUrl);
+    public Url generateCustomizedUrl(String email, String longUrl, String prefix) throws SQLException {
+        String shortened = generateUniqueShortUrl(email, longUrl);
+
+        String shortWithPre = prefix + "/" + shortened;
+        return createUrl(email, longUrl, shortWithPre);
     }
 
     // Utility method to create a URL entry in the database

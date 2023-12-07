@@ -80,8 +80,8 @@ public class DispatchAdapter {
     }
 
     // Delegates the generation of a customized short URL to the UrlService
-    public Url generateCustomizedUrl(String email, String longUrl, String shortUrl) throws Exception {
-        return urlService.generateCustomizedUrl(email, longUrl, shortUrl);
+    public Url generateCustomizedUrl(String email, String longUrl, String prefix) throws Exception {
+        return urlService.generateCustomizedUrl(email, longUrl, prefix);
     }
 }
 

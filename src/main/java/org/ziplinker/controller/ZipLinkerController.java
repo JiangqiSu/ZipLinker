@@ -155,8 +155,8 @@ public class ZipLinkerController {
             try {
                 String email = request.queryParams("email");
                 String longUrl = request.queryParams("long_url");
-                String shortUrl = request.queryParams("short_url");
-                Url url = adapter.generateCustomizedUrl(email, longUrl, shortUrl);
+                String prefix = request.queryParams("prefix");
+                Url url = adapter.generateCustomizedUrl(email, longUrl, prefix);
                 return gson.toJson(url);
             } catch (Exception e) {
                 response.status(500);
@@ -180,9 +180,9 @@ public class ZipLinkerController {
         });
 
 
-        get("/:short_url", (request, response) -> {
+        get("/*", (request, response) -> {
             try {
-                String shortUrl = request.params("short_url");
+                String shortUrl = request.splat()[0];
                 String longUrl = adapter.getLongUrl(shortUrl);
                 System.out.println(longUrl);
                 if(longUrl != null) {
