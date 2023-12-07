@@ -25,7 +25,13 @@ export default function DefaultHeader() {
   }
 
   const handleManageClick = () => {
-    navigate(manageOrHome == 'Manage' ? '/management/:userId' : '/home');
+    if (!globalThis.userEmail) {
+      navigate('/login');
+    }
+    else {
+      const newPath = `/management/${userEmail}`;
+      navigate(manageOrHome == 'Manage' ? newPath : '/home');
+    }
   };
 
   return (

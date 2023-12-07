@@ -22,7 +22,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { Button, Chip } from "@mui/material";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface Data {
   id: string,
@@ -33,28 +33,6 @@ interface Data {
   timeCreated: string,
   expiration: string,
   status: string,
-}
-
-function createData(
-  id: string,
-  name: string,
-  shortUrl: string,
-  original: string,
-  clicks: number,
-  timeCreated: string,
-  expiration: string,
-  status: string,
-): Data {
-  return {
-    id,
-    name,
-    shortUrl,
-    original,
-    clicks,
-    timeCreated,
-    expiration,
-    status,
-  };
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -238,7 +216,6 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       console.error('Error during deletion:', error);
     }
   }
-
 
   return (
     <Toolbar
