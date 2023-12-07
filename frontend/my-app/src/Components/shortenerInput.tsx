@@ -34,7 +34,7 @@ const ShortenerInput = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log('url', data);
-                const shortURL = "www.ziplink.com/" + data.short_url;
+                const shortURL = "http://f23-team1-test-dot-rice-comp-539-spring-2022.uk.r.appspot.com/" + data.short_url;
                 shortenedURLs.push({ id: data.short_url, url: shortURL });
                 globalThis.urlList.push({
                     id: data.short_url, name: '', shortURL: shortURL, oriURL: originalURL, clicks: data.clicks,

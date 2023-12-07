@@ -57,20 +57,6 @@ function createData(
   };
 }
 
-// const rows = [
-//   createData(1, 'mens apparel page', ' www.ziplink.com/abcdefghij', 'https://www.shopname...', 67, '02/30/2023', 'Active'),
-//   createData(2, 'womens apparel page', ' www.ziplink.com/fjslgjlsfj', 'https://www.shopname...', 8, '01/30/2023', 'Active'),
-//   createData(3, 'kids apparel page', ' www.ziplink.com/20p22njjd0', 'https://www.shopname...', 21, '01/12/2023', 'InActive'),
-//   createData(4, 'mens accessories page', ' www.ziplink.com/3uwls8lnls', 'https://www.another...', 11, '12/12/2022', 'Active'),
-//   createData(5, 'womens accessories page', ' www.ziplink.com/3uls67enfs', 'https://www.another...', 321, '12/11/2022', 'Active'),
-//   createData(6, 'kids accessories page', ' www.ziplink.com/738wjdjls9', 'https://www.another...', 77, '11/09/2022', 'Inactive'),
-//   createData(7, 'mens gift page', ' www.ziplink.com/3uds43ljdf', 'https://www.store...', 19, '10/01/2022', 'Active'),
-//   createData(8, 'womens gift page', ' www.ziplink.com/3ujofdzlsn', 'https://www.store...', 98, '09/22/2022', 'Active'),
-//   createData(9, 'kids gift page', ' www.ziplink.com/llwejuu999', 'https://www.store...', 7, '08/30/2022', 'Inactive'),
-//   createData(10, 'home items page', ' www.ziplink.com/u3o3u0lksj', 'https://www.home...', 101, '08/27/2022', 'Active'),
-//   createData(11, 'pets items page', ' www.ziplink.com/3udlskjnfe', 'https://www.pets...', 989, '07/12/2022', 'Active'),
-// ];
-
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
