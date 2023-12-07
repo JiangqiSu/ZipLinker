@@ -16,9 +16,8 @@ const Signup = () => {
                 name:username,
                 password: password,
             });
-            const url = `http://localhost:8080/register?${params.toString()}`;
+            const url = globalThis.url+`/register?${params.toString()}`;
             const response = await fetch(url, {
-                //mode: 'no-cors',
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',

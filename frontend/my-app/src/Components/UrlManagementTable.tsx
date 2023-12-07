@@ -20,7 +20,9 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-import {Chip} from "@mui/material";
+import {Button, Chip} from "@mui/material";
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 interface Data {
     id: number,
@@ -29,6 +31,7 @@ interface Data {
     original: string,
     clicks: number,
     timeCreated: string,
+    expiration:string,
     status: string,
 }
 
@@ -39,6 +42,7 @@ function createData(
   original: string,
   clicks: number,
   timeCreated: string,
+  expiration: string,
   status: string,
 ): Data {
   return {
@@ -48,23 +52,24 @@ function createData(
     original,
     clicks,
     timeCreated,
+    expiration,
     status,
   };
 }
 
-const rows = [
-  createData(1, 'mens apparel page', ' www.ziplink.com/abcdefghij', 'https://www.shopname...', 67, '02/30/2023', 'Active'),
-  createData(2, 'womens apparel page', ' www.ziplink.com/fjslgjlsfj', 'https://www.shopname...', 8, '01/30/2023', 'Active'),
-  createData(3, 'kids apparel page', ' www.ziplink.com/20p22njjd0', 'https://www.shopname...', 21, '01/12/2023', 'InActive'),
-  createData(4, 'mens accessories page', ' www.ziplink.com/3uwls8lnls', 'https://www.another...', 11, '12/12/2022', 'Active'),
-  createData(5, 'womens accessories page', ' www.ziplink.com/3uls67enfs', 'https://www.another...', 321, '12/11/2022', 'Active'),
-  createData(6, 'kids accessories page', ' www.ziplink.com/738wjdjls9', 'https://www.another...', 77, '11/09/2022', 'Inactive'),
-  createData(7, 'mens gift page', ' www.ziplink.com/3uds43ljdf', 'https://www.store...', 19, '10/01/2022', 'Active'),
-  createData(8, 'womens gift page', ' www.ziplink.com/3ujofdzlsn', 'https://www.store...', 98, '09/22/2022', 'Active'),
-  createData(9, 'kids gift page', ' www.ziplink.com/llwejuu999', 'https://www.store...', 7, '08/30/2022', 'Inactive'),
-  createData(10, 'home items page', ' www.ziplink.com/u3o3u0lksj', 'https://www.home...', 101, '08/27/2022', 'Active'),
-  createData(11, 'pets items page', ' www.ziplink.com/3udlskjnfe', 'https://www.pets...', 989, '07/12/2022', 'Active'),
-];
+// const rows = [
+//   createData(1, 'mens apparel page', ' www.ziplink.com/abcdefghij', 'https://www.shopname...', 67, '02/30/2023', 'Active'),
+//   createData(2, 'womens apparel page', ' www.ziplink.com/fjslgjlsfj', 'https://www.shopname...', 8, '01/30/2023', 'Active'),
+//   createData(3, 'kids apparel page', ' www.ziplink.com/20p22njjd0', 'https://www.shopname...', 21, '01/12/2023', 'InActive'),
+//   createData(4, 'mens accessories page', ' www.ziplink.com/3uwls8lnls', 'https://www.another...', 11, '12/12/2022', 'Active'),
+//   createData(5, 'womens accessories page', ' www.ziplink.com/3uls67enfs', 'https://www.another...', 321, '12/11/2022', 'Active'),
+//   createData(6, 'kids accessories page', ' www.ziplink.com/738wjdjls9', 'https://www.another...', 77, '11/09/2022', 'Inactive'),
+//   createData(7, 'mens gift page', ' www.ziplink.com/3uds43ljdf', 'https://www.store...', 19, '10/01/2022', 'Active'),
+//   createData(8, 'womens gift page', ' www.ziplink.com/3ujofdzlsn', 'https://www.store...', 98, '09/22/2022', 'Active'),
+//   createData(9, 'kids gift page', ' www.ziplink.com/llwejuu999', 'https://www.store...', 7, '08/30/2022', 'Inactive'),
+//   createData(10, 'home items page', ' www.ziplink.com/u3o3u0lksj', 'https://www.home...', 101, '08/27/2022', 'Active'),
+//   createData(11, 'pets items page', ' www.ziplink.com/3udlskjnfe', 'https://www.pets...', 989, '07/12/2022', 'Active'),
+// ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -142,7 +147,13 @@ const headCells: readonly HeadCell[] = [
     id: 'timeCreated',
     numeric: false,
     disablePadding: false,
-    label: 'Time Created',
+    label: 'Created',
+  },
+  {
+    id: 'expiration',
+    numeric: false,
+    disablePadding: false,
+    label: 'Expiration',
   },
   {
     id: 'status',
@@ -287,7 +298,7 @@ export default function UrlManagementTable() {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.id);
+      const newSelected = globalThis.urlList.map((n: { id: number; }) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -330,11 +341,18 @@ export default function UrlManagementTable() {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - globalThis.urlList.length) : 0;
+
+  const navigate = useNavigate();
+
+  function handleManageClick(): void {
+    const newPath = `/dashboard/${userEmail}`;
+    navigate(newPath);
+  }
 
   const visibleRows = React.useMemo(
     () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
+      stableSort(globalThis.urlList, getComparator(order, orderBy)).slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,
       ),
@@ -357,21 +375,29 @@ export default function UrlManagementTable() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={globalThis.urlList.length}
             />
             <TableBody>
-              {visibleRows.map((row, index) => {
-                const isItemSelected = isSelected(row.id);
+              {globalThis.urlList.map((item: {
+                status: string;
+                clicks: number;
+                expired: string;
+                created: string;
+                oriURL: string;
+                shortURL: string;
+                name: string;
+                id: number; }, index: any) => {
+                const isItemSelected = isSelected(item.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.id)}
+                    onClick={(event) => handleClick(event, item.id)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.id}
+                    key={item.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
@@ -391,14 +417,15 @@ export default function UrlManagementTable() {
                       scope="row"
                       padding="none"
                     >
-                      {row.name}
+                      {item.name}
                     </TableCell>
-                    <TableCell style={{ width: 300 }} align="left">{row.shortUrl}</TableCell>
-                    <TableCell align="left">{row.original}</TableCell>
-                    <TableCell style={{ width: 80 }} align="left">{row.clicks}</TableCell>
-                    <TableCell style={{ width: 120 }} align="left">{row.timeCreated}</TableCell>
+                    <TableCell style={{ width: 300 }} align="left">{item.shortURL}</TableCell>
+                    <TableCell align="left">{item.oriURL}</TableCell>
+                    <TableCell style={{ width: 80 }} align="left">{item.clicks}</TableCell>
+                    <TableCell style={{ width: 120 }} align="left">{item.created}</TableCell>
+                    <TableCell style={{ width: 120 }} align="left">{item.expired}</TableCell>
                     <TableCell style={{ width: 60 }} align="left">
-                      <Chip label={row.status} color={row.status=="Active"? "success":"error"} variant="outlined" />
+                      <Chip label={item.status} color={item.status==="Active"? "success":"error"} variant="outlined" />
                     </TableCell>
                   </TableRow>
                 );
@@ -418,7 +445,7 @@ export default function UrlManagementTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={globalThis.urlList.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -429,6 +456,27 @@ export default function UrlManagementTable() {
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
       />
+      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+          <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleManageClick}
+              sx={{
+                  backgroundColor: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+                  boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+                  borderRadius: '20px',
+                  '&:hover': {
+                      backgroundColor: 'linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%)',
+                  },
+                  padding: '10px 30px',
+              }}
+              endIcon={<ArrowForwardIosIcon />}
+          >
+              <Typography variant="button" component="span">
+                  Dashboard
+              </Typography>
+          </Button>
+      </Box>
     </Box>
   );
 }

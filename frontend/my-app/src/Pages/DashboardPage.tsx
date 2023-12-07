@@ -21,11 +21,6 @@ export const DashboardPage = () => {
     };
     const auth = true;
 
-    function handleManageClick(): void {
-        const newPath = `/management/${userEmail}`;
-        navigate(newPath);
-    }
-
     //TODO: wait for the backend
     return auth ? (
         <div>
@@ -45,29 +40,6 @@ export const DashboardPage = () => {
                     <SingleLinkInfo />
                 </TabPanel>
             </TabContext>
-
-            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleManageClick}
-                    sx={{
-                        backgroundColor: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-                        boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-                        borderRadius: '20px',
-                        '&:hover': {
-                            backgroundColor: 'linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%)',
-                        },
-                        padding: '10px 30px',
-                    }}
-                    endIcon={<ArrowForwardIosIcon />}
-                >
-                    <Typography variant="button" component="span">
-                        Manage your URLs
-                    </Typography>
-                </Button>
-            </Box>
-
         </div>
     ) : <Navigate to="/login" />
 }

@@ -8,10 +8,16 @@ import React, {useState, useEffect} from 'react';
 
 export default function DefaultHeader() {
   const [manageOrHome, setManageOrHome] = useState(useLocation().pathname == '/management/:userId' ? 'Home' : 'Manage');
+  const [loginOrSignOut, setLoginOrSignOut] = useState(globalThis.userEmail ? 'Sign Out' : 'Log In');
 
   const navigate = useNavigate();
   const handleLoginClick = () => {
-    navigate('/login');
+    if (loginOrSignOut==='Log In'){
+      navigate('/login');
+    }else{
+      globalThis.userEmail=''
+    }
+
   };
   const handleManageClick = () => {
     navigate(manageOrHome == 'Manage' ? '/management/:userId' : '/home');
@@ -25,7 +31,7 @@ export default function DefaultHeader() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             ZipLinker
           </Typography>
-          <Button color="inherit" onClick={handleLoginClick}>Login</Button>
+          <Button color="inherit" onClick={handleLoginClick}>{loginOrSignOut}</Button>
         </Toolbar>
       </AppBar>
     </Box>

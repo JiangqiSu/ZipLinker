@@ -4,6 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Container, TextField, Button, Typography, Paper } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 
+declare global {
+    var userEmail: string;
+}
+
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -15,7 +19,7 @@ const Login = () => {
                 email: email,
                 password: password
             });
-            const url = `http://localhost:8080/login?${params.toString()}`;
+            const url = globalThis.url+`/login?${params.toString()}`;
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -26,6 +30,7 @@ const Login = () => {
                 const data = await response.json();
                 console.log('Login successful', data);
                 const Email = data.email;
+                globalThis.userEmail=Email
                 navigate(`/dashboard/:${Email}`); 
             } else {
                 const errorData = await response.text();
